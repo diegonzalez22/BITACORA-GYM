@@ -1,5 +1,5 @@
 /* Guarda la app en el celular para que abra sin señal */
-var CACHE = "bitacora-gym-v1";
+var CACHE = "bitacora-gym-v2";
 var ARCHIVOS = [
   "./",
   "./index.html",
@@ -31,19 +31,44 @@ self.addEventListener("activate", function (ev) {
   );
 });
 
-/* primero lo guardado, y en segundo plano se actualiza si hay señal */
+/* La app (html y js) se pide primero a la red para que las
+   actualizaciones lleguen de una. Si no hay señal usa lo guardado.
+   Los iconos sí salen del cache porque no cambian. */
+function esApp(req) {
+  return req.mode === "navigate" ||
+         /\.(html|js|json)(\?|$)/.test(new URL(req.url).pathname) ||
+         new URL(req.url).pathname.replace(/\/$/, "") === "";
+}
+
 self.addEventListener("fetch", function (ev) {
   if (ev.request.method !== "GET") return;
-  ev.respondWith(
-    caches.match(ev.request).then(function (hit) {
-      var red = fetch(ev.request).then(function (res) {
-        if (res && res.status === 200 && res.type === "basic") {
+
+  if (esApp(ev.request)) {
+    ev.respondWith(
+      fetch(ev.request).then(function (res) {
+        if (res && res.status === 200) {
           var copia = res.clone();
           caches.open(CACHE).then(function (c) { c.put(ev.request, copia); });
         }
         return res;
-      }).catch(function () { return hit; });
-      return hit || red;
+      }).catch(function () {
+        return caches.match(ev.request).then(function (hit) {
+          return hit || caches.match("./index.html");
+        });
+      })
+    );
+    return;
+  }
+
+  ev.respondWith(
+    caches.match(ev.request).then(function (hit) {
+      return hit || fetch(ev.request).then(function (res) {
+        if (res && res.status === 200) {
+          var copia = res.clone();
+          caches.open(CACHE).then(function (c) { c.put(ev.request, copia); });
+        }
+        return res;
+      });
     })
   );
 });

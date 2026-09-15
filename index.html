@@ -14,42 +14,43 @@
   :root{
     --iron:#14171B; --surface:#1D222A; --surfaceHi:#262D37; --line:#333C48;
     --chalk:#ECE8E1; --mute:#8B95A3; --blue:#3E7CB1; --amber:#D8A430;
-    --red:#B04A3C; --green:#8FD3A8; --greenBg:#1E2B25;
+    --red:#B04A3C; --green:#8FD3A8; --greenBg:#1E2B25; --oro:#E8C25A;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  body{
-    margin:0;background:var(--iron);color:var(--chalk);
+  body{margin:0;background:var(--iron);color:var(--chalk);
     font-family:-apple-system,'Helvetica Neue',Helvetica,system-ui,sans-serif;
-    padding-bottom:60px;
-  }
+    padding-bottom:60px}
   .wrap{max-width:560px;margin:0 auto;padding:20px 16px;
     padding-top:calc(20px + env(safe-area-inset-top))}
-  h1{font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1;margin:0}
-  .sub{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:14px;color:var(--mute);flex-wrap:wrap}
+  h1{font-size:28px;font-weight:800;letter-spacing:-.03em;line-height:1;margin:0}
+  .sub{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:13px;
+    color:var(--mute);flex-wrap:wrap}
   .estado{font-size:12px;font-weight:600}
   .ok{color:var(--green)} .err{color:#E39A8E}
-  .tabs{display:flex;gap:4px;background:var(--surface);padding:4px;border-radius:8px;margin:20px 0}
+  .tabs{display:flex;gap:3px;background:var(--surface);padding:4px;border-radius:8px;margin:18px 0}
   .tabs button{flex:1;background:transparent;color:var(--mute);border:none;border-radius:6px;
-    padding:10px 0;font-size:14px;font-weight:600;font-family:inherit}
+    padding:10px 0;font-size:13px;font-weight:600;font-family:inherit}
   .tabs button.on{background:var(--surfaceHi);color:var(--chalk)}
   .dias{display:flex;gap:4px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px}
-  .dias button{flex:1 0 auto;min-width:46px;background:var(--surface);color:var(--mute);
+  .dias button{flex:1 0 auto;min-width:44px;background:var(--surface);color:var(--mute);
     border:1px solid var(--line);border-radius:6px;padding:9px 6px;font-size:13px;
     font-weight:600;font-family:inherit}
   .dias button.tiene{color:var(--chalk)}
   .dias button.on{background:var(--blue);border-color:var(--blue);color:var(--chalk)}
   .chip{background:var(--surface);color:var(--chalk);border:1px solid var(--line);
     border-radius:20px;padding:8px 14px;font-size:14px;font-family:inherit;
-    display:inline-flex;align-items:center;gap:8px}
+    display:inline-flex;align-items:center;gap:7px}
   .chip.on{background:var(--blue);border-color:var(--blue)}
   .chip img{width:26px;height:26px;border-radius:13px;object-fit:cover}
   .chip.foto{padding-left:6px}
+  .pto{width:8px;height:8px;border-radius:50%;display:inline-block;flex:0 0 8px}
   .dash{background:transparent;color:var(--mute);border:1px dashed var(--line);
     border-radius:20px;padding:8px 14px;font-size:14px;font-family:inherit}
   .fila{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
-  input,select{background:var(--iron);border:1px solid var(--line);color:var(--chalk);
+  input,select,textarea{background:var(--iron);border:1px solid var(--line);color:var(--chalk);
     border-radius:6px;padding:10px 12px;font-size:16px;width:100%;outline:none;
     font-variant-numeric:tabular-nums;font-family:inherit}
+  textarea{resize:vertical;min-height:54px;font-size:14px;line-height:1.45}
   .btn{background:var(--blue);color:var(--chalk);border:none;border-radius:6px;
     padding:12px 16px;font-size:15px;font-weight:600;font-family:inherit;width:100%}
   .btn.gris{background:var(--surfaceHi)}
@@ -57,7 +58,7 @@
     font-weight:600;font-family:inherit;padding:6px 0}
   .link.rojo{color:var(--red);font-size:13px}
   .link.gris{color:var(--mute);font-size:13px}
-  .vacio{border:1px dashed var(--line);border-radius:8px;padding:24px;text-align:center;
+  .vacio{border:1px dashed var(--line);border-radius:8px;padding:22px;text-align:center;
     color:var(--mute);font-size:14px}
   .label{font-size:13px;color:var(--mute);margin-bottom:8px}
   .card{background:var(--surface);border-radius:8px;padding:12px 14px;margin-bottom:8px}
@@ -80,72 +81,103 @@
   .seg button{background:transparent;color:var(--mute);border:none;border-radius:4px;
     padding:5px 14px;font-size:13px;font-weight:600;font-family:inherit}
   .seg button.on{background:var(--blue);color:var(--chalk)}
-  .stats{display:flex;gap:10px;margin-bottom:20px}
-  .stat{flex:1;background:var(--surface);border-radius:8px;padding:12px 10px}
-  .stat b{font-size:20px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;display:block}
-  .stat span{font-size:12px;color:var(--mute);display:block;margin-top:2px}
+  .stats{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+  .stat{flex:1;min-width:92px;background:var(--surface);border-radius:8px;padding:12px 10px}
+  .stat b{font-size:19px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;display:block}
+  .stat span{font-size:11px;color:var(--mute);display:block;margin-top:2px}
   .pie{margin-top:36px;padding-top:20px;border-top:1px solid var(--line)}
-  .pie .fila{gap:8px}
   .pie .btn{flex:1;width:auto}
-  .lupa{position:fixed;inset:0;background:rgba(10,12,14,.92);display:flex;
-    align-items:center;justify-content:center;padding:20px;z-index:50}
+  .lupa{position:fixed;inset:0;background:rgba(10,12,14,.94);display:flex;
+    align-items:center;justify-content:center;padding:20px;z-index:60}
   .lupa img{max-width:100%;max-height:100%;border-radius:10px}
+  .pr{background:var(--oro);color:#14171B;font-size:10px;font-weight:800;
+    letter-spacing:.06em;padding:3px 7px;border-radius:10px;text-transform:uppercase}
+  .titGrupo{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    margin:14px 0 8px}
+  .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .cal .dh{font-size:10px;color:var(--mute);text-align:center;padding-bottom:4px;font-weight:600}
+  .cal .d{aspect-ratio:1;border-radius:6px;background:var(--surface);display:flex;
+    flex-direction:column;align-items:center;justify-content:center;font-size:12px;
+    color:var(--mute);font-variant-numeric:tabular-nums}
+  .cal .d.act{background:var(--blue);color:var(--chalk);font-weight:700}
+  .cal .d.hoy{border:1.5px solid var(--amber)}
+  .cal .d.fuera{opacity:.2}
+  .entreno{position:fixed;inset:0;background:var(--iron);z-index:55;overflow-y:auto;
+    padding:calc(18px + env(safe-area-inset-top)) 16px 40px}
   button{cursor:pointer}
   .oculto{display:none}
+  .barra{height:8px;border-radius:4px;background:var(--surfaceHi);overflow:hidden}
+  .barra i{display:block;height:100%;border-radius:4px}
 </style>
 </head>
 <body>
 <div class="wrap" id="app"></div>
+<div id="capa"></div>
 <input type="file" id="inFoto" accept="image/*" capture="environment" class="oculto">
 <input type="file" id="inJson" accept="application/json,.json" class="oculto">
 
 <script>
-/* ========== constantes ========== */
+/* ===================== CONSTANTES ===================== */
 var LLAVE="bitacora-gym-v1";
 var KG_POR_LB=0.45359237;
-var DIAS=[
- {i:0,c:"Lun",l:"Lunes"},{i:1,c:"Mar",l:"Martes"},{i:2,c:"Mié",l:"Miércoles"},
- {i:3,c:"Jue",l:"Jueves"},{i:4,c:"Vie",l:"Viernes"},{i:5,c:"Sáb",l:"Sábado"},
- {i:6,c:"Dom",l:"Domingo"}];
+var DIAS=[{i:0,c:"Lun",l:"Lunes"},{i:1,c:"Mar",l:"Martes"},{i:2,c:"Mié",l:"Miércoles"},
+ {i:3,c:"Jue",l:"Jueves"},{i:4,c:"Vie",l:"Viernes"},{i:5,c:"Sáb",l:"Sábado"},{i:6,c:"Dom",l:"Domingo"}];
 var MESES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+var MESES_L=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto",
+ "Septiembre","Octubre","Noviembre","Diciembre"];
+var GRUPOS=[
+ {id:"pierna", label:"Pierna",           color:"#5B8DD9"},
+ {id:"pecho",  label:"Pecho",            color:"#D95B5B"},
+ {id:"espalda",label:"Espalda",          color:"#5BD98A"},
+ {id:"hombro", label:"Hombro",           color:"#D9A45B"},
+ {id:"biceps", label:"Bíceps / Tríceps", color:"#A45BD9"},
+ {id:"core",   label:"Core / Abdomen",   color:"#5BD9D9"},
+ {id:"cardio", label:"Cardio",           color:"#E8724F"},
+ {id:"otro",   label:"Sin clasificar",   color:"#8B95A3"}];
 
-/* ========== utilidades ========== */
-function hoyISO(){
-  var d=new Date();
-  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-}
-function diaDeISO(iso){ return (new Date(iso+"T00:00:00").getDay()+6)%7; }
-function fmtFecha(iso){ var p=iso.split("-"); return p[2]+" "+MESES[+p[1]-1]+" "+p[0]; }
-function uid(){ return Math.random().toString(36).slice(2,10); }
-function uni(s){ return s.u||"kg"; }
-function enKg(s){ return uni(s)==="lb" ? (+s.w||0)*KG_POR_LB : (+s.w||0); }
-function equiv(v,u){
-  var n=parseFloat(v); if(isNaN(n)) return "";
-  return u==="lb" ? (n*KG_POR_LB).toFixed(1)+" kg" : (n/KG_POR_LB).toFixed(1)+" lb";
-}
-function volumen(sets){ return sets.reduce(function(a,s){return a+enKg(s)*(+s.r||0);},0); }
-function maxKg(sets){ return sets.reduce(function(a,s){return Math.max(a,enKg(s));},0); }
-function nfmt(n){ return Math.round(n).toLocaleString("es-MX"); }
-function esc(t){ return String(t==null?"":t).replace(/[&<>"']/g,function(c){
-  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+/* ===================== UTILIDADES ===================== */
+function hoyISO(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function diaDeISO(iso){return (new Date(iso+"T00:00:00").getDay()+6)%7;}
+function fmtFecha(iso){var p=iso.split("-");return p[2]+" "+MESES[+p[1]-1]+" "+p[0];}
+function uid(){return Math.random().toString(36).slice(2,10);}
+function esc(t){return String(t==null?"":t).replace(/[&<>"']/g,function(c){
+  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function nfmt(n){return Math.round(n).toLocaleString("es-MX");}
+function n1(n){return (Math.round(n*10)/10).toLocaleString("es-MX");}
+function uni(s){return s.u||"kg";}
+function enKg(s){return uni(s)==="lb"?(+s.w||0)*KG_POR_LB:(+s.w||0);}
+function equiv(v,u){var n=parseFloat(v);if(isNaN(n))return "";
+  return u==="lb"?(n*KG_POR_LB).toFixed(1)+" kg":(n/KG_POR_LB).toFixed(1)+" lb";}
+function volumen(sets){return (sets||[]).reduce(function(a,s){return a+enKg(s)*(+s.r||0);},0);}
+function maxKg(sets){return (sets||[]).reduce(function(a,s){return Math.max(a,enKg(s));},0);}
+function rm1(sets){return (sets||[]).reduce(function(a,s){
+  var r=+s.r||0,k=enKg(s); if(!k||!r) return a;
+  return Math.max(a,k*(1+r/30));},0);}
+function labelGrupo(id){var g=GRUPOS.filter(function(x){return x.id===id;})[0];return g?g.label:"Sin clasificar";}
+function colorGrupo(id){var g=GRUPOS.filter(function(x){return x.id===id;})[0];return g?g.color:"#8B95A3";}
+function ritmo(c){var d=+c.dist||0,m=+c.min||0;if(!d||!m)return null;return m/d;}
+function fmtRitmo(r){if(r==null)return "—";var m=Math.floor(r),s=Math.round((r-m)*60);
+  if(s===60){m++;s=0;} return m+"'"+String(s).padStart(2,"0")+'"';}
+function velocidad(c){var d=+c.dist||0,m=+c.min||0;if(!d||!m)return null;return d/(m/60);}
+function esCardio(ej){return !!(ej&&ej.tipo==="cardio");}
+function sesCardio(s){return !!s.cardio;}
 
-/* ========== estado ========== */
-var S={ejercicios:[],sesiones:[],etiquetas:{},unidad:"kg",fotos:{}};
-var U={vista:"registrar",diaSel:diaDeISO(hoyISO()),activo:null,fecha:hoyISO(),
-       series:[{w:"",r:""}],nuevo:false,editEtiqueta:false,ejGrafica:null,grupoFiltro:null,
-       lupa:null,aviso:null,estado:"ok",detalle:""};
+/* ===================== ESTADO ===================== */
+var S={ejercicios:[],sesiones:[],etiquetas:{},unidad:"kg",fotos:{},jornadas:{},peso:[]};
+var U={vista:"hoy",diaSel:diaDeISO(hoyISO()),activo:null,fecha:hoyISO(),
+       series:[{w:"",r:""}],cardio:{min:"",dist:"",nivel:"",fc:""},
+       nuevo:false,grupoNuevo:"otro",tipoNuevo:"fuerza",editEtiqueta:false,
+       ejGrafica:null,grupoFiltro:null,busca:"",lupa:null,aviso:null,
+       estado:"ok",detalle:"",calMes:null,entreno:null,pesoIn:""};
 
-/* ========== persistencia ========== */
+/* ===================== PERSISTENCIA ===================== */
 function guardar(){
   try{
     localStorage.setItem(LLAVE,JSON.stringify(S));
     var v=localStorage.getItem(LLAVE);
-    if(!v){ U.estado="error"; U.detalle="el navegador no devolvió lo guardado"; }
-    else { U.estado="ok"; U.detalle=""; }
-  }catch(e){
-    U.estado="error";
-    U.detalle=(e&&e.name||"Error")+": "+(e&&e.message||e);
-  }
+    if(!v){U.estado="error";U.detalle="el navegador no devolvió lo guardado";}
+    else {U.estado="ok";U.detalle="";}
+  }catch(e){U.estado="error";U.detalle=(e&&e.name||"Error")+": "+(e&&e.message||e);}
 }
 function cargar(){
   try{
@@ -153,77 +185,99 @@ function cargar(){
     if(v){
       var d=JSON.parse(v);
       S.ejercicios=(d.ejercicios||[]).map(function(e){
-        return {id:e.id,nombre:e.nombre,dia:(e.dia===undefined?null:e.dia)}; });
+        return {id:e.id,nombre:e.nombre,dia:(e.dia===undefined?null:e.dia),
+                grupo:e.grupo||"otro",tipo:e.tipo||"fuerza",nota:e.nota||""};});
       S.sesiones=d.sesiones||[];
       S.etiquetas=d.etiquetas||{};
       S.unidad=d.unidad||"kg";
       S.fotos=d.fotos||{};
+      S.jornadas=d.jornadas||{};
+      S.peso=d.peso||[];
     }
     U.estado="ok";
-  }catch(e){
-    U.estado="error";
-    U.detalle="No se pudo leer lo guardado: "+(e&&e.message||e);
-  }
+  }catch(e){U.estado="error";U.detalle="No se pudo leer lo guardado: "+(e&&e.message||e);}
 }
-function aviso(msg,error){
-  U.aviso={m:msg,e:!!error};
-  render();
-  setTimeout(function(){ U.aviso=null; render(); },3000);
-}
+function aviso(m,err){U.aviso={m:m,e:!!err};render();
+  setTimeout(function(){U.aviso=null;render();},2800);}
 
-/* ========== derivados ========== */
-function nombreDe(id){
-  var e=S.ejercicios.filter(function(x){return x.id===id;})[0];
-  return e?e.nombre:"Ejercicio borrado";
-}
-function delDia(){
+/* ===================== DERIVADOS ===================== */
+function ejDe(id){return S.ejercicios.filter(function(x){return x.id===id;})[0]||null;}
+function nombreDe(id){var e=ejDe(id);return e?e.nombre:"Ejercicio borrado";}
+function listaVisible(){
+  if(U.busca.trim()){
+    var q=U.busca.trim().toLowerCase();
+    return S.ejercicios.filter(function(e){return e.nombre.toLowerCase().indexOf(q)>=0;});
+  }
   return S.ejercicios.filter(function(e){
-    return U.diaSel===null ? (e.dia===null||e.dia===undefined) : e.dia===U.diaSel; });
+    return U.diaSel===null?(e.dia===null||e.dia===undefined):e.dia===U.diaSel;});
 }
-function sinDia(){
-  return S.ejercicios.filter(function(e){return e.dia===null||e.dia===undefined;});
+function sinDia(){return S.ejercicios.filter(function(e){return e.dia===null||e.dia===undefined;});}
+function yaRegistrado(){if(!U.activo)return null;
+  return S.sesiones.filter(function(s){return s.ejercicioId===U.activo&&s.fecha===U.fecha;})[0]||null;}
+function ultimaDe(id,antesDe){
+  return S.sesiones.filter(function(s){return s.ejercicioId===id&&s.fecha!==antesDe;})
+    .sort(function(a,b){return a.fecha<b.fecha?1:-1;})[0]||null;}
+function sesionesDe(id){return S.sesiones.filter(function(s){return s.ejercicioId===id;})
+    .sort(function(a,b){return a.fecha>b.fecha?1:-1;});}
+function porFecha(){var m={};S.sesiones.forEach(function(s){(m[s.fecha]=m[s.fecha]||[]).push(s);});
+  return Object.keys(m).sort(function(a,b){return a<b?1:-1;}).map(function(f){return [f,m[f]];});}
+function volDia(l){return l.reduce(function(a,s){return a+(sesCardio(s)?0:volumen(s.sets));},0);}
+function minCardioDia(l){return l.reduce(function(a,s){return a+(sesCardio(s)?(+s.cardio.min||0):0);},0);}
+function esRecord(s){
+  if(sesCardio(s))return false;
+  var mio=rm1(s.sets); if(!mio) return false;
+  var previas=S.sesiones.filter(function(x){
+    return x.ejercicioId===s.ejercicioId && !sesCardio(x) && x.fecha<s.fecha;});
+  if(!previas.length) return false;
+  var mejor=previas.reduce(function(a,x){return Math.max(a,rm1(x.sets));},0);
+  return mio>mejor+0.01;
 }
-function yaRegistrado(){
-  if(!U.activo) return null;
-  return S.sesiones.filter(function(s){
-    return s.ejercicioId===U.activo && s.fecha===U.fecha; })[0]||null;
-}
-function ultimaDe(id){
-  return S.sesiones
-    .filter(function(s){return s.ejercicioId===id && s.fecha!==U.fecha;})
-    .sort(function(a,b){return a.fecha<b.fecha?1:-1;})[0]||null;
-}
-function porFecha(){
-  var m={};
-  S.sesiones.forEach(function(s){ (m[s.fecha]=m[s.fecha]||[]).push(s); });
-  return Object.keys(m).sort(function(a,b){return a<b?1:-1;}).map(function(f){return [f,m[f]];});
+function recordDe(id){
+  return sesionesDe(id).reduce(function(a,s){return Math.max(a,sesCardio(s)?0:rm1(s.sets));},0);}
+function estancado(id){
+  var ss=sesionesDe(id).filter(function(s){return !sesCardio(s);});
+  if(ss.length<4) return 0;
+  var mejor=0,idx=-1;
+  ss.forEach(function(s,i){var v=rm1(s.sets); if(v>mejor+0.01){mejor=v;idx=i;}});
+  if(idx<0) return 0;
+  return idx>=4?idx:0;
 }
 function sinGuardar(){
-  var y=yaRegistrado();
-  var a=U.series.filter(function(s){return s.w!==""&&s.r!=="";})
+  var y=yaRegistrado(),ej=ejDe(U.activo);
+  if(esCardio(ej)){
+    var a=[U.cardio.min,U.cardio.dist,U.cardio.nivel,U.cardio.fc]
+      .map(function(v){return v===""?"":String(+v);}).join("|");
+    var c=(y&&y.cardio)?[y.cardio.min,y.cardio.dist,y.cardio.nivel,y.cardio.fc]
+      .map(function(v){return (v===""||v==null)?"":String(+v);}).join("|"):"|||";
+    return a!==c;
+  }
+  var x=U.series.filter(function(s){return s.w!==""&&s.r!=="";})
     .map(function(s){return (+s.w)+"|"+(+s.r)+"|"+S.unidad;}).join(",");
-  var b=y?y.sets.map(function(x){return (+x.w)+"|"+(+x.r)+"|"+uni(x);}).join(","):"";
-  return a!==b;
+  var b=(y&&y.sets)?y.sets.map(function(z){return (+z.w)+"|"+(+z.r)+"|"+uni(z);}).join(","):"";
+  return x!==b;
 }
 function cargarBorrador(){
-  var y=yaRegistrado();
-  if(y){
-    U.series=y.sets.map(function(x){return {w:String(x.w),r:String(x.r)};});
-    S.unidad=uni(y.sets[0]);
-  } else {
+  var y=yaRegistrado(),ej=ejDe(U.activo);
+  if(esCardio(ej)){
+    U.cardio=(y&&y.cardio)?{min:String(y.cardio.min||""),dist:String(y.cardio.dist||""),
+      nivel:(y.cardio.nivel==null?"":String(y.cardio.nivel)),
+      fc:(y.cardio.fc==null?"":String(y.cardio.fc))}:{min:"",dist:"",nivel:"",fc:""};
     U.series=[{w:"",r:""}];
+  } else {
+    U.series=(y&&y.sets)?y.sets.map(function(x){return {w:String(x.w),r:String(x.r)};}):[{w:"",r:""}];
+    if(y&&y.sets&&y.sets.length) S.unidad=uni(y.sets[0]);
   }
 }
 
-/* ========== acciones ========== */
+/* ===================== ACCIONES ===================== */
 function crearEjercicio(nombre){
-  nombre=(nombre||"").trim();
-  if(!nombre) return;
-  var grupo=U.grupoNuevo||"otro";
-  var e={id:uid(),nombre:nombre,dia:U.diaSel,grupo:grupo};
+  nombre=(nombre||"").trim(); if(!nombre) return;
+  var tipo=U.tipoNuevo||"fuerza";
+  var e={id:uid(),nombre:nombre,dia:U.diaSel,
+         grupo:tipo==="cardio"?"cardio":(U.grupoNuevo||"otro"),tipo:tipo,nota:""};
   S.ejercicios.push(e);
-  U.activo=e.id; U.nuevo=false; U.grupoNuevo=null;
-  cargarBorrador(); guardar(); render();
+  U.activo=e.id;U.nuevo=false;U.grupoNuevo="otro";U.tipoNuevo="fuerza";U.busca="";
+  cargarBorrador();guardar();render();
 }
 function borrarEjercicio(id){
   S.ejercicios=S.ejercicios.filter(function(e){return e.id!==id;});
@@ -231,71 +285,110 @@ function borrarEjercicio(id){
   delete S.fotos[id];
   if(U.activo===id) U.activo=null;
   if(U.ejGrafica===id) U.ejGrafica=null;
-  guardar(); render();
+  guardar();render();
 }
 function guardarSesion(){
-  if(!U.activo){ aviso("Elige un ejercicio primero",true); return; }
+  if(!U.activo){aviso("Elige un ejercicio primero",true);return;}
+  var ej=ejDe(U.activo),y=yaRegistrado();
+  if(esCardio(ej)){
+    if(U.cardio.min===""&&U.cardio.dist===""){aviso("Pon al menos duración o distancia",true);return;}
+    var c={min:+U.cardio.min||0,dist:+U.cardio.dist||0,
+           nivel:U.cardio.nivel===""?null:+U.cardio.nivel,
+           fc:U.cardio.fc===""?null:+U.cardio.fc};
+    if(y){y.cardio=c;delete y.sets;guardar();aviso(ej.nombre+" actualizado");return;}
+    S.sesiones.push({id:uid(),ejercicioId:U.activo,fecha:U.fecha,cardio:c});
+    guardar();aviso(ej.nombre+" guardado");return;
+  }
   var limpias=U.series.filter(function(s){return s.w!==""&&s.r!=="";})
     .map(function(s){return {w:+s.w,r:+s.r,u:S.unidad};});
-  if(!limpias.length){ aviso("Escribe al menos una serie con peso y reps",true); return; }
-  var y=yaRegistrado();
-  if(y){ y.sets=limpias; guardar(); aviso(nombreDe(U.activo)+" actualizado"); return; }
-  S.sesiones.push({id:uid(),ejercicioId:U.activo,fecha:U.fecha,sets:limpias});
-  guardar(); aviso(nombreDe(U.activo)+" guardado");
+  if(!limpias.length){aviso("Escribe al menos una serie con peso y reps",true);return;}
+  if(y){
+    y.sets=limpias;delete y.cardio;guardar();
+    aviso(esRecord(y)?"¡Récord nuevo en "+ej.nombre+"!":ej.nombre+" actualizado");return;
+  }
+  var ns={id:uid(),ejercicioId:U.activo,fecha:U.fecha,sets:limpias};
+  S.sesiones.push(ns);guardar();
+  aviso(esRecord(ns)?"¡Récord nuevo en "+ej.nombre+"!":ej.nombre+" guardado");
 }
 function borrarSesion(id){
   S.sesiones=S.sesiones.filter(function(s){return s.id!==id;});
-  cargarBorrador(); guardar(); render();
+  cargarBorrador();guardar();render();
+}
+function jornada(f){return S.jornadas[f]||null;}
+function minJornada(f){
+  var j=jornada(f); if(!j) return null;
+  if(j.fin&&j.ini) return Math.max(1,Math.round((j.fin-j.ini)/60000));
+  return null;
+}
+function iniciarJornada(){S.jornadas[U.fecha]={ini:Date.now(),fin:null};guardar();render();}
+function terminarJornada(){
+  var j=S.jornadas[U.fecha]; if(!j) return;
+  j.fin=Date.now();guardar();aviso("Sesión de "+minJornada(U.fecha)+" min guardada");
+}
+function guardarPeso(){
+  var v=parseFloat(U.pesoIn);
+  if(!v||v<=0){aviso("Escribe un peso válido",true);return;}
+  S.peso=S.peso.filter(function(p){return p.fecha!==U.fecha;});
+  S.peso.push({fecha:U.fecha,kg:v});
+  S.peso.sort(function(a,b){return a.fecha>b.fecha?1:-1;});
+  U.pesoIn="";guardar();aviso("Peso corporal guardado");
 }
 
-/* ========== fotos ========== */
+/* ===================== FOTOS ===================== */
 document.getElementById("inFoto").addEventListener("change",function(ev){
-  var f=ev.target.files&&ev.target.files[0];
-  ev.target.value="";
+  var f=ev.target.files&&ev.target.files[0];ev.target.value="";
   if(!f||!U.activo) return;
-  var destino=U.activo;
-  var fr=new FileReader();
+  var destino=U.activo,fr=new FileReader();
   fr.onload=function(){
     var img=new Image();
     img.onload=function(){
-      var lado=280, k=Math.min(lado/img.width,lado/img.height,1);
+      var lado=280,k=Math.min(lado/img.width,lado/img.height,1);
       var c=document.createElement("canvas");
-      c.width=Math.round(img.width*k); c.height=Math.round(img.height*k);
+      c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);
       c.getContext("2d").drawImage(img,0,0,c.width,c.height);
-      S.fotos[destino]=c.toDataURL("image/jpeg",0.6);
-      guardar();
-      if(U.estado==="error") aviso("No hubo espacio para la foto",true);
-      else aviso("Foto agregada");
+      S.fotos[destino]=c.toDataURL("image/jpeg",0.6);guardar();
+      aviso(U.estado==="error"?"No hubo espacio para la foto":"Foto agregada",U.estado==="error");
     };
-    img.onerror=function(){ aviso("No se pudo leer esa imagen",true); };
+    img.onerror=function(){aviso("No se pudo leer esa imagen",true);};
     img.src=fr.result;
   };
   fr.readAsDataURL(f);
 });
 
-/* ========== respaldo ========== */
+/* ===================== RESPALDO ===================== */
 function bajar(txt,nombre,tipo){
-  var b=new Blob([txt],{type:tipo});
-  var url=URL.createObjectURL(b);
-  var a=document.createElement("a");
-  a.href=url; a.download=nombre;
-  document.body.appendChild(a); a.click();
-  document.body.removeChild(a);
+  var b=new Blob([txt],{type:tipo}),url=URL.createObjectURL(b);
+  var a=document.createElement("a");a.href=url;a.download=nombre;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
   setTimeout(function(){URL.revokeObjectURL(url);},1000);
 }
 function exportarCSV(){
-  if(!S.sesiones.length){ aviso("Todavía no hay entrenamientos que exportar",true); return; }
-  var f=[["Fecha","Dia","Rutina","Ejercicio","Serie","Peso","Unidad","Peso_kg","Peso_lb","Reps","Volumen_kg"]];
+  if(!S.sesiones.length){aviso("Todavía no hay entrenamientos que exportar",true);return;}
+  var f=[["Fecha","Dia","Rutina","Grupo","Ejercicio","Tipo","Serie","Peso","Unidad",
+          "Peso_kg","Peso_lb","Reps","Volumen_kg","1RM_kg",
+          "Duracion_min","Distancia_km","Nivel","FC_prom","Min_jornada"]];
   porFecha().forEach(function(par){
-    var d=diaDeISO(par[0]);
+    var d=diaDeISO(par[0]),mj=minJornada(par[0]);
     par[1].forEach(function(s){
-      s.sets.forEach(function(set,i){
-        var kg=enKg(set);
-        f.push([par[0],DIAS[d].l,S.etiquetas[d]||"",nombreDe(s.ejercicioId),i+1,
-          set.w,uni(set),kg.toFixed(2),(kg/KG_POR_LB).toFixed(2),set.r,(kg*set.r).toFixed(2)]);
-      });
+      var ej=ejDe(s.ejercicioId)||{};
+      if(sesCardio(s)){
+        f.push([par[0],DIAS[d].l,S.etiquetas[d]||"",labelGrupo(ej.grupo),nombreDe(s.ejercicioId),
+          "cardio","","","","","","","","",s.cardio.min||"",s.cardio.dist||"",
+          s.cardio.nivel==null?"":s.cardio.nivel,s.cardio.fc==null?"":s.cardio.fc,mj||""]);
+      } else {
+        s.sets.forEach(function(set,i){
+          var kg=enKg(set);
+          f.push([par[0],DIAS[d].l,S.etiquetas[d]||"",labelGrupo(ej.grupo),nombreDe(s.ejercicioId),
+            "fuerza",i+1,set.w,uni(set),kg.toFixed(2),(kg/KG_POR_LB).toFixed(2),set.r,
+            (kg*set.r).toFixed(2),(kg*(1+set.r/30)).toFixed(2),"","","","",mj||""]);
+        });
+      }
     });
   });
+  if(S.peso.length){
+    f.push([]);f.push(["PESO CORPORAL"]);f.push(["Fecha","kg"]);
+    S.peso.forEach(function(p){f.push([p.fecha,p.kg]);});
+  }
   bajar("\uFEFF"+f.map(function(r){return r.join(",");}).join("\n"),
     "gym-reporte-"+hoyISO()+".csv","text/csv");
   aviso("Reporte descargado");
@@ -305,59 +398,47 @@ function exportarJSON(){
   aviso("Copia descargada");
 }
 document.getElementById("inJson").addEventListener("change",function(ev){
-  var f=ev.target.files&&ev.target.files[0];
-  ev.target.value="";
-  if(!f) return;
+  var f=ev.target.files&&ev.target.files[0];ev.target.value="";if(!f) return;
   var fr=new FileReader();
   fr.onload=function(){
     try{
       var d=JSON.parse(fr.result);
       if(!Array.isArray(d.ejercicios)||!Array.isArray(d.sesiones)) throw new Error();
       S.ejercicios=d.ejercicios.map(function(e){
-        return {id:e.id,nombre:e.nombre,dia:(e.dia===undefined?null:e.dia)}; });
-      S.sesiones=d.sesiones; S.etiquetas=d.etiquetas||{};
-      S.unidad=d.unidad||"kg"; S.fotos=d.fotos||{};
-      U.activo=null; cargarBorrador(); guardar();
-      aviso("Copia restaurada");
-    }catch(e){ aviso("Ese archivo no es una copia válida",true); }
+        return {id:e.id,nombre:e.nombre,dia:(e.dia===undefined?null:e.dia),
+                grupo:e.grupo||"otro",tipo:e.tipo||"fuerza",nota:e.nota||""};});
+      S.sesiones=d.sesiones;S.etiquetas=d.etiquetas||{};
+      S.unidad=d.unidad||"kg";S.fotos=d.fotos||{};
+      S.jornadas=d.jornadas||{};S.peso=d.peso||[];
+      U.activo=null;cargarBorrador();guardar();aviso("Copia restaurada");
+    }catch(e){aviso("Ese archivo no es una copia válida",true);}
   };
   fr.readAsText(f);
 });
 
-/* ========== gráfica svg propia ========== */
-var GRUPOS=[
-  {id:"pierna",   label:"Pierna",          color:"#5B8DD9"},
-  {id:"pecho",    label:"Pecho",           color:"#D95B5B"},
-  {id:"espalda",  label:"Espalda",         color:"#5BD98A"},
-  {id:"hombro",   label:"Hombro",          color:"#D9A45B"},
-  {id:"biceps",   label:"Bíceps / Tríceps",color:"#A45BD9"},
-  {id:"core",     label:"Core / Abdomen",  color:"#5BD9D9"},
-  {id:"otro",     label:"Otro",            color:"#8B95A3"},
-];
-function labelGrupo(id){ var g=GRUPOS.filter(function(x){return x.id===id;})[0]; return g?g.label:"Sin grupo"; }
-function colorGrupo(id){ var g=GRUPOS.filter(function(x){return x.id===id;})[0]; return g?g.color:"#8B95A3"; }
-function grafica(datos,clave,color){
-  if(datos.length===0) return "";
-  var W=520,H=200,ml=44,mr=10,mt=14,mb=26;
+/* ===================== GRÁFICA ===================== */
+function grafica(datos,clave,color,sufijo){
+  if(!datos.length) return "";
+  var W=520,H=190,ml=46,mr=10,mt=14,mb=26;
   var vals=datos.map(function(d){return d[clave];});
-  var min=Math.min.apply(null,vals), max=Math.max.apply(null,vals);
-  if(min===max){ min=min-1; max=max+1; }
-  var pad=(max-min)*0.12; min-=pad; max+=pad;
-  if(min<0) min=0;
-  var px=function(i){ return datos.length===1 ? ml+(W-ml-mr)/2
-      : ml+i*(W-ml-mr)/(datos.length-1); };
-  var py=function(v){ return mt+(H-mt-mb)*(1-(v-min)/(max-min)); };
+  var min=Math.min.apply(null,vals),max=Math.max.apply(null,vals);
+  if(min===max){min=min-1;max=max+1;}
+  var pad=(max-min)*0.12;min-=pad;max+=pad;if(min<0)min=0;
+  var px=function(i){return datos.length===1?ml+(W-ml-mr)/2:ml+i*(W-ml-mr)/(datos.length-1);};
+  var py=function(v){return mt+(H-mt-mb)*(1-(v-min)/(max-min));};
   var g="";
   for(var k=0;k<4;k++){
-    var v=min+(max-min)*k/3, y=py(v);
+    var v=min+(max-min)*k/3,y=py(v);
     g+='<line x1="'+ml+'" y1="'+y+'" x2="'+(W-mr)+'" y2="'+y+'" stroke="#333C48" stroke-width="1"/>'
-     + '<text x="'+(ml-6)+'" y="'+(y+4)+'" fill="#8B95A3" font-size="11" text-anchor="end">'+nfmt(v)+'</text>';
+     + '<text x="'+(ml-6)+'" y="'+(y+4)+'" fill="#8B95A3" font-size="11" text-anchor="end">'
+     + (sufijo==="ritmo"?fmtRitmo(v):nfmt(v))+'</text>';
   }
   var d="";
-  datos.forEach(function(p,i){ d+=(i?" L":"M")+px(i).toFixed(1)+" "+py(p[clave]).toFixed(1); });
+  datos.forEach(function(p,i){d+=(i?" L":"M")+px(i).toFixed(1)+" "+py(p[clave]).toFixed(1);});
   g+='<path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linejoin="round"/>';
   datos.forEach(function(p,i){
-    g+='<circle cx="'+px(i).toFixed(1)+'" cy="'+py(p[clave]).toFixed(1)+'" r="3" fill="'+color+'"/>';
+    g+='<circle cx="'+px(i).toFixed(1)+'" cy="'+py(p[clave]).toFixed(1)+'" r="3.2" fill="'+color+'"/>';
+    if(p.pr) g+='<circle cx="'+px(i).toFixed(1)+'" cy="'+py(p[clave]).toFixed(1)+'" r="6.5" fill="none" stroke="#E8C25A" stroke-width="2"/>';
   });
   var paso=Math.ceil(datos.length/6);
   datos.forEach(function(p,i){
@@ -367,50 +448,100 @@ function grafica(datos,clave,color){
   return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block">'+g+'</svg>';
 }
 
-/* ========== render ========== */
+/* ===================== BLOQUES ===================== */
 function hSets(sets){
   return '<div class="sets">'+sets.map(function(x){
     return '<div><div class="p">'+esc(x.w)+" "+uni(x)+" × "+esc(x.r)+'</div>'
-         + '<div class="e">'+equiv(x.w,uni(x))+'</div></div>';
-  }).join("")+'</div>';
+         + '<div class="e">'+equiv(x.w,uni(x))+'</div></div>';}).join("")+'</div>';
 }
-
+function hCardio(c){
+  var r=ritmo(c),v=velocidad(c),p=[];
+  if(c.min) p.push('<div><div class="p">'+n1(c.min)+' min</div><div class="e">duración</div></div>');
+  if(c.dist) p.push('<div><div class="p">'+n1(c.dist)+' km</div><div class="e">distancia</div></div>');
+  if(r!=null) p.push('<div><div class="p">'+fmtRitmo(r)+'</div><div class="e">min/km</div></div>');
+  if(v!=null) p.push('<div><div class="p">'+n1(v)+' km/h</div><div class="e">velocidad</div></div>');
+  if(c.nivel!=null&&c.nivel!=="") p.push('<div><div class="p">Niv '+c.nivel+'</div><div class="e">nivel</div></div>');
+  if(c.fc!=null&&c.fc!=="") p.push('<div><div class="p">'+c.fc+' ppm</div><div class="e">pulso</div></div>');
+  return '<div class="sets">'+p.join("")+'</div>';
+}
+function hResumenSesion(s){return sesCardio(s)?hCardio(s.cardio):hSets(s.sets);}
 function zonaGuardar(){
-  var y=yaRegistrado(), h="";
-  if(y && !sinGuardar()){
+  var y=yaRegistrado(),h="";
+  if(y&&!sinGuardar()){
     h+='<div style="border:1px solid #33503F;color:var(--green);border-radius:6px;padding:12px;'
      + 'text-align:center;font-size:15px;font-weight:600;margin-top:10px">✓ Todo guardado</div>';
   } else {
     h+='<button class="btn" data-act="guardar" style="margin-top:10px">'
      + (y?"Actualizar registro":"Guardar ejercicio")+'</button>';
   }
-  h+= y
-    ? '<button class="link rojo" data-act="borrarSesion" style="width:100%;margin-top:10px">Borrar este registro</button>'
-    : '<div style="font-size:12px;color:var(--mute);margin-top:10px;text-align:center">Guarda uno y sigue con el siguiente del día</div>';
+  h+= y?'<button class="link rojo" data-act="borrarSesion" style="width:100%;margin-top:10px">Borrar este registro</button>'
+      :'<div style="font-size:12px;color:var(--mute);margin-top:10px;text-align:center">Guarda uno y sigue con el siguiente del día</div>';
+  return h;
+}
+function textoDerivado(){
+  var c={min:U.cardio.min,dist:U.cardio.dist},r=ritmo(c),v=velocidad(c);
+  if(r==null) return "";
+  return "Ritmo "+fmtRitmo(r)+" min/km · "+n1(v)+" km/h";
+}
+function texto1RM(){
+  var e1=rm1(U.series.filter(function(s){return s.w!==""&&s.r!=="";})
+    .map(function(s){return {w:+s.w,r:+s.r,u:S.unidad};}));
+  return e1?"1RM estimado: "+n1(e1)+" kg":"";
+}
+function hFormulario(){
+  var ej=ejDe(U.activo),h="";
+  if(esCardio(ej)){
+    var campos=[["min","Duración (min)","decimal"],["dist","Distancia (km)","decimal"],
+                ["nivel","Nivel / inclinación","numeric"],["fc","Pulso promedio (ppm)","numeric"]];
+    h+='<div style="display:flex;flex-wrap:wrap;gap:10px">';
+    campos.forEach(function(c){
+      h+='<div style="flex:1 1 46%;min-width:140px">'
+       + '<div style="font-size:12px;color:var(--mute);margin-bottom:5px">'+c[1]+'</div>'
+       + '<input type="number" inputmode="'+c[2]+'" data-card="'+c[0]+'" value="'+esc(U.cardio[c[0]])+'"></div>';
+    });
+    h+='</div><div id="derivado" style="font-size:12px;color:var(--mute);margin-top:10px;'
+     + 'font-variant-numeric:tabular-nums">'+textoDerivado()+'</div>';
+    return h;
+  }
+  h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
+   + '<div class="label" style="margin:0">Series</div><div class="seg">'
+   + ["kg","lb"].map(function(u){return '<button data-uni="'+u+'" class="'+(S.unidad===u?"on":"")+'">'+u+'</button>';}).join("")
+   + '</div></div>'
+   + '<div class="serieFila" style="margin-bottom:6px"><div class="num"></div>'
+   + '<div style="flex:1;font-size:12px;color:var(--mute)">Peso</div>'
+   + '<div style="flex:1;font-size:12px;color:var(--mute)">Reps</div>'
+   + '<div style="width:32px"></div></div>';
+  U.series.forEach(function(s,i){
+    h+='<div style="margin-bottom:8px"><div class="serieFila">'
+     + '<div class="num">'+(i+1)+'</div>'
+     + '<input type="number" inputmode="decimal" placeholder="'+S.unidad+'" data-serie="'+i+'" data-campo="w" value="'+esc(s.w)+'">'
+     + '<input type="number" inputmode="numeric" placeholder="reps" data-serie="'+i+'" data-campo="r" value="'+esc(s.r)+'">'
+     + '<button class="x" data-quitar="'+i+'">×</button></div>'
+     + '<div class="conv" data-conv="'+i+'">'+(s.w!==""?"= "+equiv(s.w,S.unidad):"")+'</div></div>';
+  });
+  h+='<button class="link" data-act="masSerie">+ Otra serie</button>';
+  h+='<div data-derivado="1" style="font-size:12px;color:var(--mute);margin-top:4px">'+texto1RM()+'</div>';
   return h;
 }
 
+/* ===================== RENDER ===================== */
 function render(){
-  var h="";
-  var y=yaRegistrado();
+  if(U.entreno){renderEntreno();return;}
+  document.getElementById("capa").innerHTML="";
+  var h="",y=yaRegistrado(),ejAct=ejDe(U.activo);
 
-  /* encabezado */
   h+='<h1>Bitácora de cargas</h1><div class="sub">'
-   + '<span>'+porFecha().length+" días entrenados · "+S.ejercicios.length+' ejercicios</span>'
+   + '<span>'+porFecha().length+" días · "+S.ejercicios.length+' ejercicios</span>'
    + '<span class="estado '+(U.estado==="ok"?"ok":"err")+'">'
    + (U.estado==="ok"?"✓ guardado":"⚠ no se guardó")+'</span></div>';
 
-  h+='<div class="tabs">'
-   + ['registrar','historial','progreso'].map(function(v){
-       return '<button data-tab="'+v+'" class="'+(U.vista===v?"on":"")+'">'
-         + v.charAt(0).toUpperCase()+v.slice(1)+'</button>'; }).join("")
+  h+='<div class="tabs">'+[["hoy","Hoy"],["historial","Historial"],["progreso","Progreso"],["resumen","Resumen"]]
+   .map(function(v){return '<button data-tab="'+v[0]+'" class="'+(U.vista===v[0]?"on":"")+'">'+v[1]+'</button>';}).join("")
    + '</div>';
 
   if(U.estado==="error"){
-    h+='<div class="cardRoja">El guardado en este teléfono está fallando. Usa '
-     + '<b>Copia completa</b> abajo antes de cerrar'
-     + (U.detalle?'<div style="margin-top:8px;font-size:11px;font-family:monospace;color:var(--mute);word-break:break-all">'+esc(U.detalle)+'</div>':"")
-     + '</div>';
+    h+='<div class="cardRoja">El guardado en este teléfono está fallando. Usa <b>Copia completa</b> abajo antes de cerrar'
+     + (U.detalle?'<div style="margin-top:8px;font-size:11px;font-family:monospace;color:var(--mute);word-break:break-all">'+esc(U.detalle)+'</div>':"")+'</div>';
   }
   if(U.aviso){
     h+='<div style="background:'+(U.aviso.e?"#3A2220":"var(--greenBg)")+';color:'
@@ -418,244 +549,284 @@ function render(){
      + esc(U.aviso.m)+'</div>';
   }
 
-  /* ---------- REGISTRAR ---------- */
-  if(U.vista==="registrar"){
+  /* ---------------- HOY ---------------- */
+  if(U.vista==="hoy"){
     h+='<div class="dias">'+DIAS.map(function(d){
       var tiene=S.ejercicios.some(function(e){return e.dia===d.i;});
       return '<button data-dia="'+d.i+'" class="'+(U.diaSel===d.i?"on":(tiene?"tiene":""))+'">'+d.c+'</button>';
     }).join("")
-    + (sinDia().length?'<button data-dia="null" class="'+(U.diaSel===null?"on":"tiene")+'">Otros</button>':"")
-    + '</div>';
+    +(sinDia().length?'<button data-dia="null" class="'+(U.diaSel===null?"on":"tiene")+'">Otros</button>':"")+'</div>';
 
     if(U.diaSel!==null){
       if(U.editEtiqueta){
         h+='<div class="fila" style="flex-wrap:nowrap">'
-         + '<input id="etiquetaIn" value="'+esc(S.etiquetas[U.diaSel]||"")+'" placeholder="Pierna, Pecho y tríceps…">'
+         + '<input id="etiquetaIn" value="'+esc(S.etiquetas[U.diaSel]||"")+'" placeholder="Pierna, Pecho y hombro…">'
          + '<button class="btn" style="width:auto" data-act="guardarEtiqueta">Listo</button></div>';
       } else {
-        h+='<div style="margin-bottom:18px"><button data-act="editEtiqueta" '
-         + 'style="background:none;border:none;padding:0;text-align:left;color:var(--chalk);font-family:inherit">'
-         + '<span style="font-size:22px;font-weight:700;letter-spacing:-.02em">'+DIAS[U.diaSel].l+'</span>'
-         + '<span style="color:var(--mute);font-size:16px;margin-left:8px">'
-         + esc(S.etiquetas[U.diaSel]||"poner nombre")+'</span></button></div>';
+        h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px">'
+         + '<button data-act="editEtiqueta" style="background:none;border:none;padding:0;text-align:left;color:var(--chalk);font-family:inherit;flex:1;min-width:0">'
+         + '<span style="font-size:21px;font-weight:700;letter-spacing:-.02em">'+DIAS[U.diaSel].l+'</span>'
+         + '<span style="color:var(--mute);font-size:15px;margin-left:8px">'+esc(S.etiquetas[U.diaSel]||"poner nombre")+'</span></button>';
+        if(listaVisible().length)
+          h+='<button class="link" data-act="entreno" style="white-space:nowrap">Modo entreno ▸</button>';
+        h+='</div>';
       }
+      var j=jornada(U.fecha),mj=minJornada(U.fecha);
+      h+='<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">';
+      if(mj!=null){
+        h+='<span style="font-size:13px;color:var(--mute)">Sesión de <b style="color:var(--chalk)">'+mj+' min</b></span>'
+         + '<button class="link gris" data-act="reiniciarJornada">reiniciar</button>';
+      } else if(j&&j.ini){
+        h+='<span style="font-size:13px;color:var(--amber)">● En curso</span>'
+         + '<button class="link" data-act="terminarJornada">Terminar sesión</button>';
+      } else {
+        h+='<button class="link gris" data-act="iniciarJornada">⏱ Iniciar sesión del día</button>';
+      }
+      h+='</div>';
     }
 
-    h+='<div class="label">Ejercicio o máquina</div><div class="fila">';
-    delDia().forEach(function(e){
-      var col=colorGrupo(e.grupo);
-      h+='<button class="chip '+(U.activo===e.id?"on":"")+(S.fotos[e.id]?" foto":"")+'" data-ej="'+e.id+'">'
-       + (S.fotos[e.id]?'<img src="'+S.fotos[e.id]+'" alt="">':
-         '<span style="width:8px;height:8px;border-radius:50%;background:'+col+';flex:0 0 8px;display:inline-block;margin-right:4px"></span>')
-       + esc(e.nombre)+'</button>';
-    });
-    h+='<button class="dash" data-act="nuevo">+ Nuevo</button></div>';
+    h+='<input id="buscaIn" placeholder="Buscar ejercicio…" value="'+esc(U.busca)+'" style="margin-bottom:12px">';
+    h+='<div id="chipsEj">'+hChips()+'</div>';
 
     if(U.nuevo){
-      var gn=U.grupoNuevo||"otro";
-      h+='<div style="margin-bottom:8px">'
-       + '<div class="label" style="margin-bottom:6px">Grupo muscular</div>'
-       + '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">'
-       + GRUPOS.map(function(g){
-           return '<button data-gn="'+g.id+'" style="background:'+(gn===g.id?g.color:"var(--surface)")+
-             ';color:'+(gn===g.id?"#14171B":"var(--chalk)")+';border:1px solid '+(gn===g.id?g.color:"var(--line)")+
-             ';border-radius:16px;padding:6px 12px;font-size:13px;font-weight:600;font-family:inherit">'+g.label+'</button>';
-         }).join("")
-       + '</div>'
-       + '<div class="fila" style="flex-wrap:nowrap">'
-       + '<input id="nuevoIn" placeholder="Press banca, Prensa de pierna…">'
+      h+='<div style="background:var(--surface);border-radius:8px;padding:12px;margin-bottom:16px">'
+       + '<div class="label" style="margin-bottom:6px">Tipo</div>'
+       + '<div class="seg" style="margin-bottom:12px;display:inline-flex">'
+       + [["fuerza","Fuerza"],["cardio","Cardio"]].map(function(t){
+           return '<button data-tn="'+t[0]+'" class="'+(U.tipoNuevo===t[0]?"on":"")+'">'+t[1]+'</button>';}).join("")
+       + '</div>';
+      if(U.tipoNuevo!=="cardio"){
+        h+='<div class="label" style="margin-bottom:6px">Grupo muscular</div>'
+         + '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">'
+         + GRUPOS.filter(function(g){return g.id!=="cardio";}).map(function(g){
+             var on=U.grupoNuevo===g.id;
+             return '<button data-gn="'+g.id+'" style="background:'+(on?g.color:"var(--iron)")+';color:'
+               +(on?"#14171B":"var(--chalk)")+';border:1px solid '+(on?g.color:"var(--line)")
+               +';border-radius:16px;padding:6px 12px;font-size:13px;font-weight:600;font-family:inherit">'+g.label+'</button>';
+           }).join("")+'</div>';
+      }
+      h+='<div class="fila" style="flex-wrap:nowrap;margin:0">'
+       + '<input id="nuevoIn" placeholder="'+(U.tipoNuevo==="cardio"?"Caminadora, Elíptica…":"Press banca, Prensa…")+'">'
        + '<button class="btn" style="width:auto" data-act="crear">Crear</button></div></div>';
     }
 
-    if(!delDia().length && !U.nuevo){
-      h+='<div class="vacio">'+(U.diaSel===null
-        ?"Aquí quedan los ejercicios sin día asignado"
-        :"Todavía no hay ejercicios para el "+DIAS[U.diaSel].l.toLowerCase())+'</div>';
+    if(!listaVisible().length&&!U.nuevo){
+      h+='<div class="vacio">'+(U.busca.trim()?"Ningún ejercicio se llama así":
+        (U.diaSel===null?"Aquí quedan los ejercicios sin día asignado"
+        :"Todavía no hay ejercicios para el "+DIAS[U.diaSel].l.toLowerCase()))+'</div>';
     }
 
-    if(U.activo){
-      /* foto */
-      h+='<div style="display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:8px;padding:10px;margin:18px 0">';
+    if(U.activo&&ejAct){
+      var col=colorGrupo(ejAct.grupo);
+      h+='<div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);'
+       + 'border-radius:8px;padding:10px;margin:18px 0 12px">';
       h+= S.fotos[U.activo]
-        ? '<img data-lupa="'+U.activo+'" src="'+S.fotos[U.activo]+'" style="width:64px;height:64px;border-radius:8px;object-fit:cover">'
-        : '<div style="width:64px;height:64px;border-radius:8px;border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;color:var(--mute);font-size:22px">+</div>';
-      h+='<div style="flex:1"><div style="font-size:15px;font-weight:700;margin-bottom:4px">'+esc(nombreDe(U.activo))+'</div>'
-       + '<div style="display:flex;gap:12px"><button class="link" data-act="foto">'
+        ? '<img data-lupa="'+U.activo+'" src="'+S.fotos[U.activo]+'" style="width:64px;height:64px;border-radius:8px;object-fit:cover;flex:0 0 64px">'
+        : '<div data-act="foto" style="width:64px;height:64px;flex:0 0 64px;border-radius:8px;border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;color:var(--mute);font-size:22px">+</div>';
+      h+='<div style="flex:1;min-width:0">'
+       + '<div style="font-size:15px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:7px">'
+       + '<span class="pto" style="background:'+col+'"></span>'+esc(ejAct.nombre)+'</div>'
+       + '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px">'
+       + '<select data-tipo="'+U.activo+'" style="width:auto;font-size:12px;padding:5px 8px">'
+       + [["fuerza","Fuerza"],["cardio","Cardio"]].map(function(t){
+           return '<option value="'+t[0]+'"'+((ejAct.tipo||"fuerza")===t[0]?" selected":"")+'>'+t[1]+'</option>';}).join("")
+       + '</select>';
+      if(!esCardio(ejAct)){
+        h+='<select data-grupo="'+U.activo+'" style="width:auto;font-size:12px;padding:5px 8px;border-color:'+col+'">'
+         + GRUPOS.filter(function(g){return g.id!=="cardio";}).map(function(g){
+             return '<option value="'+g.id+'"'+((ejAct.grupo||"otro")===g.id?" selected":"")+'>'+g.label+'</option>';}).join("")
+         + '</select>';
+      }
+      h+='</div><div style="display:flex;gap:12px"><button class="link" data-act="foto">'
        + (S.fotos[U.activo]?"Cambiar foto":"Agregar foto")+'</button>'
        + (S.fotos[U.activo]?'<button class="link gris" data-act="quitarFoto">Quitar</button>':"")
        + '</div></div></div>';
 
+      h+='<textarea data-nota="'+U.activo+'" placeholder="Nota fija: asiento en 4, agarre ancho…" '
+       + 'style="margin-bottom:12px">'+esc(ejAct.nota||"")+'</textarea>';
+
+      var rec=recordDe(U.activo);
+      if(rec) h+='<div style="font-size:12px;color:var(--oro);margin-bottom:12px">★ Tu récord: '+n1(rec)+' kg de 1RM estimado</div>';
+
+      var est=estancado(U.activo);
+      if(est>=4) h+='<div class="cardAmbar" style="font-size:13px;color:var(--mute)">'
+        + 'Llevas <b style="color:var(--chalk)">'+est+' sesiones</b> sin superar tu mejor marca aquí. '
+        + 'Puede ser momento de subir carga o cambiar el esquema</div>';
+
       if(y){
         h+='<div class="cardVerde"><div style="font-size:12px;color:var(--green);font-weight:600;'
-         + 'letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px">✓ Registrado · '+fmtFecha(U.fecha)+'</div>'
-         + hSets(y.sets)
-         + '<div style="font-size:12px;color:var(--mute);margin-top:8px">'+y.sets.length
-         + " series · "+nfmt(volumen(y.sets))+' kg de volumen</div></div>';
+         + 'letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
+         + '<span>✓ Registrado · '+fmtFecha(U.fecha)+'</span>'
+         + (esRecord(y)?'<span class="pr">Récord</span>':"")+'</div>'+hResumenSesion(y);
+        if(!sesCardio(y)) h+='<div style="font-size:12px;color:var(--mute);margin-top:8px">'
+          + y.sets.length+" series · "+nfmt(volumen(y.sets))+" kg de volumen · 1RM "+n1(rm1(y.sets))+' kg</div>';
+        h+='</div>';
       }
+      var ult=ultimaDe(U.activo,U.fecha);
+      if(ult) h+='<div class="cardAmbar"><div style="font-size:13px;color:var(--mute);margin-bottom:6px">'
+        + "La vez pasada · "+fmtFecha(ult.fecha)+'</div>'+hResumenSesion(ult)+'</div>';
 
-      var ult=ultimaDe(U.activo);
-      if(ult){
-        h+='<div class="cardAmbar"><div style="font-size:13px;color:var(--mute);margin-bottom:6px">'
-         + "La vez pasada · "+fmtFecha(ult.fecha)+'</div>'+hSets(ult.sets)+'</div>';
-      }
-
-      h+='<div class="label">Fecha</div>'
-       + '<input type="date" id="fechaIn" value="'+U.fecha+'" style="margin-bottom:18px">';
-
-      h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
-       + '<div class="label" style="margin:0">Series</div><div class="seg">'
-       + ["kg","lb"].map(function(u){
-           return '<button data-uni="'+u+'" class="'+(S.unidad===u?"on":"")+'">'+u+'</button>'; }).join("")
-       + '</div></div>';
-
-      h+='<div class="serieFila" style="margin-bottom:6px">'
-       + '<div class="num"></div>'
-       + '<div style="flex:1;font-size:12px;color:var(--mute)">Peso</div>'
-       + '<div style="flex:1;font-size:12px;color:var(--mute)">Reps</div>'
-       + '<div style="width:32px"></div></div>';
-
-      U.series.forEach(function(s,i){
-        h+='<div style="margin-bottom:8px"><div class="serieFila">'
-         + '<div class="num">'+(i+1)+'</div>'
-         + '<input type="number" inputmode="decimal" placeholder="'+S.unidad+'" data-serie="'+i+'" data-campo="w" value="'+esc(s.w)+'">'
-         + '<input type="number" inputmode="numeric" placeholder="reps" data-serie="'+i+'" data-campo="r" value="'+esc(s.r)+'">'
-         + '<button class="x" data-quitar="'+i+'">×</button></div>'
-         + '<div class="conv" id="conv'+i+'">'+(s.w!==""?"= "+equiv(s.w,S.unidad):"")+'</div></div>';
-      });
-
-      h+='<button class="link" data-act="masSerie">+ Otra serie</button>';
-
+      h+='<div class="label">Fecha</div><input type="date" id="fechaIn" value="'+U.fecha+'" style="margin-bottom:18px">';
+      h+=hFormulario();
       h+='<div id="zonaGuardar">'+zonaGuardar()+'</div>';
     }
 
-    var delDiaFecha=S.sesiones.filter(function(s){return s.fecha===U.fecha;});
-    if(delDiaFecha.length){
+    var hoyLista=S.sesiones.filter(function(s){return s.fecha===U.fecha;});
+    if(hoyLista.length){
       h+='<div style="margin-top:28px"><div class="label" style="padding-bottom:8px;border-bottom:1px solid var(--line)">'
-       + "Lo que llevas el "+fmtFecha(U.fecha)+'</div>';
-      delDiaFecha.forEach(function(s){
+       + "Lo que llevas el "+fmtFecha(U.fecha)
+       + (minJornada(U.fecha)!=null?" · "+minJornada(U.fecha)+" min":"")+'</div>';
+      hoyLista.forEach(function(s){
+        var e=ejDe(s.ejercicioId)||{};
         h+='<button class="card" data-ir="'+s.ejercicioId+'" style="display:block;width:100%;text-align:left;border:none;color:var(--chalk);font-family:inherit">'
-         + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
-         + (S.fotos[s.ejercicioId]?'<img src="'+S.fotos[s.ejercicioId]+'" style="width:22px;height:22px;border-radius:5px;object-fit:cover">':"")
+         + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">'
+         + (S.fotos[s.ejercicioId]?'<img src="'+S.fotos[s.ejercicioId]+'" style="width:22px;height:22px;border-radius:5px;object-fit:cover">'
+            :'<span class="pto" style="background:'+colorGrupo(e.grupo)+'"></span>')
          + '<span style="font-size:14px;font-weight:700">'+esc(nombreDe(s.ejercicioId))+'</span>'
-         + '<span style="color:var(--green);font-size:13px">✓</span></div>'
+         + '<span style="color:var(--green);font-size:13px">✓</span>'
+         + (esRecord(s)?'<span class="pr">Récord</span>':"")+'</div>'
          + '<div style="font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums">'
-         + s.sets.map(function(x){return esc(x.w)+" "+uni(x)+" × "+esc(x.r);}).join("   ·   ")
+         + (sesCardio(s)?(n1(s.cardio.min)+" min"+(s.cardio.dist?" · "+n1(s.cardio.dist)+" km":""))
+            :s.sets.map(function(x){return esc(x.w)+" "+uni(x)+" × "+esc(x.r);}).join("   ·   "))
          + '</div></button>';
       });
       h+='</div>';
     }
   }
 
-  /* ---------- HISTORIAL ---------- */
+  /* ---------------- HISTORIAL ---------------- */
   if(U.vista==="historial"){
     var pf=porFecha();
     if(!pf.length) h+='<div class="vacio">Aquí van a aparecer tus entrenamientos agrupados por día</div>';
     pf.forEach(function(par){
-      var f=par[0], lista=par[1], d=diaDeISO(f);
-      var vol=lista.reduce(function(a,s){return a+volumen(s.sets);},0);
+      var f=par[0],lista=par[1],d=diaDeISO(f),vol=volDia(lista),mc=minCardioDia(lista),mj=minJornada(f);
       h+='<div style="margin-bottom:22px"><div class="cab"><div>'
-       + '<span style="font-size:18px;font-weight:700">'+DIAS[d].l+'</span>'
+       + '<span style="font-size:17px;font-weight:700">'+DIAS[d].l+'</span>'
        + '<span style="color:var(--mute);font-size:14px;margin-left:8px">'+fmtFecha(f)+'</span>'
        + (S.etiquetas[d]?'<span style="color:var(--amber);font-size:14px;margin-left:8px">'+esc(S.etiquetas[d])+'</span>':"")
-       + '</div><div style="color:var(--mute);font-size:13px">'+nfmt(vol)+' kg</div></div>';
+       + '</div><div style="color:var(--mute);font-size:12px;text-align:right">'
+       + (vol?nfmt(vol)+" kg":"")+(vol&&mc?"<br>":"")+(mc?nfmt(mc)+" min cardio":"")
+       + (mj!=null?"<br>"+mj+" min total":"")+'</div></div>';
       lista.forEach(function(s){
-        h+='<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'
-         + '<div style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px">'
-         + (S.fotos[s.ejercicioId]?'<img data-lupa="'+s.ejercicioId+'" src="'+S.fotos[s.ejercicioId]+'" style="width:28px;height:28px;border-radius:6px;object-fit:cover">':"")
-         + esc(nombreDe(s.ejercicioId))+'</div>'
-         + '<button class="link" data-corregir="'+s.id+'">Corregir</button></div>'
-         + hSets(s.sets)+'</div>';
+        var e=ejDe(s.ejercicioId)||{};
+        h+='<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:8px">'
+         + '<div style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;min-width:0">'
+         + (S.fotos[s.ejercicioId]?'<img data-lupa="'+s.ejercicioId+'" src="'+S.fotos[s.ejercicioId]+'" style="width:28px;height:28px;border-radius:6px;object-fit:cover">'
+            :'<span class="pto" style="background:'+colorGrupo(e.grupo)+'"></span>')
+         + '<span style="overflow:hidden;text-overflow:ellipsis">'+esc(nombreDe(s.ejercicioId))+'</span>'
+         + (esRecord(s)?'<span class="pr">Récord</span>':"")+'</div>'
+         + '<button class="link" data-corregir="'+s.id+'" style="white-space:nowrap">Corregir</button></div>'
+         + hResumenSesion(s)+'</div>';
       });
       h+='</div>';
     });
-
     if(S.ejercicios.length){
-      h+='<div style="margin-top:28px"><div class="label">Mover ejercicios de día</div>';
+      h+='<div style="margin-top:28px"><div class="label">Mis ejercicios</div>';
       S.ejercicios.forEach(function(e){
-        var cg=colorGrupo(e.grupo);
-        h+='<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:15px">'
-         + '<span style="width:8px;height:8px;border-radius:50%;background:'+cg+';flex:0 0 8px;display:inline-block"></span>'
-         + '<span style="flex:1">'+esc(e.nombre)+'</span>'
-         + '<select data-grupo="'+e.id+'" style="width:auto;font-size:12px"><option value="">Grupo</option>'
+        h+='<div style="display:flex;align-items:center;gap:6px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px">'
+         + '<span class="pto" style="background:'+colorGrupo(e.grupo)+'"></span>'
+         + '<span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis">'+esc(e.nombre)+'</span>'
+         + '<select data-grupo="'+e.id+'" style="width:auto;font-size:12px;padding:5px 6px">'
          + GRUPOS.map(function(g){return '<option value="'+g.id+'"'+((e.grupo||"otro")===g.id?" selected":"")+'>'+g.label+'</option>';}).join("")
          + '</select>'
-         + '<select data-mover="'+e.id+'" style="width:auto"><option value=""'+((e.dia===null||e.dia===undefined)?" selected":"")+'>Sin día</option>'
+         + '<select data-mover="'+e.id+'" style="width:auto;font-size:12px;padding:5px 6px"><option value=""'+((e.dia===null||e.dia===undefined)?" selected":"")+'>—</option>'
          + DIAS.map(function(d){return '<option value="'+d.i+'"'+(e.dia===d.i?" selected":"")+'>'+d.c+'</option>';}).join("")
          + '</select>'
-         + '<button class="link rojo" data-borrarEj="'+e.id+'">Eliminar</button></div>';
+         + '<button class="link rojo" data-borrarEj="'+e.id+'">✕</button></div>';
       });
       h+='</div>';
     }
   }
 
-  /* ---------- PROGRESO ---------- */
+  /* ---------------- PROGRESO ---------------- */
   if(U.vista==="progreso"){
-    /* filtro por grupo */
     var gruposConEj=GRUPOS.filter(function(g){
-      return S.ejercicios.some(function(e){return (e.grupo||"otro")===g.id;});
-    });
-    if(gruposConEj.length>1){
-      h+='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">';
-      h+='<button data-gf="" style="background:'+(U.grupoFiltro===null?"var(--surfaceHi)":"var(--surface)")+
-        ';color:var(--chalk);border:1px solid var(--line);border-radius:16px;padding:6px 12px;font-size:13px;font-weight:600;font-family:inherit">Todos</button>';
-      gruposConEj.forEach(function(g){
-        var on=U.grupoFiltro===g.id;
-        h+='<button data-gf="'+g.id+'" style="background:'+(on?g.color:"var(--surface)")+
-          ';color:'+(on?"#14171B":"var(--chalk)")+';border:1px solid '+(on?g.color:"var(--line)")+
-          ';border-radius:16px;padding:6px 12px;font-size:13px;font-weight:600;font-family:inherit">'+g.label+'</button>';
-      });
-      h+='</div>';
+      return S.ejercicios.some(function(e){return (e.grupo||"otro")===g.id;});});
+    if(gruposConEj.length){
+      h+='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">'
+       + '<button data-gf="" style="background:'+(U.grupoFiltro===null?"var(--surfaceHi)":"var(--surface)")
+       + ';color:var(--chalk);border:1px solid var(--line);border-radius:16px;padding:6px 12px;font-size:13px;font-weight:600;font-family:inherit">Todos</button>'
+       + gruposConEj.map(function(g){var on=U.grupoFiltro===g.id;
+           return '<button data-gf="'+g.id+'" style="background:'+(on?g.color:"var(--surface)")+';color:'
+             +(on?"#14171B":"var(--chalk)")+';border:1px solid '+(on?g.color:"var(--line)")
+             +';border-radius:16px;padding:6px 12px;font-size:13px;font-weight:600;font-family:inherit">'+g.label+'</button>';}).join("")
+       + '</div>';
     }
-    var ejFiltrados=S.ejercicios.filter(function(e){
-      return U.grupoFiltro===null || (e.grupo||"otro")===U.grupoFiltro;
-    });
-    if(!S.ejercicios.length){
-      h+='<div class="vacio">Registra tu primer entrenamiento para ver el progreso</div>';
-    } else if(!ejFiltrados.length){
-      h+='<div class="vacio">No hay ejercicios en ese grupo todavía</div>';
-    } else {
-      /* agrupar los ejercicios filtrados */
-      var porGrupo={};
-      ejFiltrados.forEach(function(e){
-        var g=e.grupo||"otro";
-        (porGrupo[g]=porGrupo[g]||[]).push(e);
-      });
-      Object.keys(porGrupo).forEach(function(gid){
-        var g=GRUPOS.filter(function(x){return x.id===gid;})[0]||{label:"Otro",color:"#8B95A3"};
-        if(Object.keys(porGrupo).length>1){
-          h+='<div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;'
-           + 'color:'+g.color+';margin-bottom:8px;margin-top:4px">'+g.label+'</div>';
-        }
-        h+='<div class="fila">';
-        porGrupo[gid].forEach(function(e){
+    var ejF=S.ejercicios.filter(function(e){return U.grupoFiltro===null||(e.grupo||"otro")===U.grupoFiltro;});
+    if(!S.ejercicios.length) h+='<div class="vacio">Registra tu primer entrenamiento para ver el progreso</div>';
+    else if(!ejF.length) h+='<div class="vacio">No hay ejercicios en ese grupo todavía</div>';
+    else {
+      var pg={};ejF.forEach(function(e){var g=e.grupo||"otro";(pg[g]=pg[g]||[]).push(e);});
+      GRUPOS.forEach(function(g){
+        if(!pg[g.id]) return;
+        h+='<div class="titGrupo" style="color:'+g.color+'">'+g.label+'</div><div class="fila">';
+        pg[g.id].forEach(function(e){
           h+='<button class="chip '+(U.ejGrafica===e.id?"on":"")+'" data-graf="'+e.id+'">'
-           + '<span style="width:8px;height:8px;border-radius:50%;background:'+g.color+';display:inline-block;margin-right:4px"></span>'
-           + esc(e.nombre)+'</button>';
-        });
+           + '<span class="pto" style="background:'+g.color+'"></span>'+esc(e.nombre)+'</button>';});
         h+='</div>';
       });
     }
 
     if(U.ejGrafica){
-      var datos=S.sesiones.filter(function(s){return s.ejercicioId===U.ejGrafica;})
-        .sort(function(a,b){return a.fecha>b.fecha?1:-1;})
-        .map(function(s){return {f:s.fecha.slice(5).replace("-","/"),peso:maxKg(s.sets),vol:volumen(s.sets)};});
-      if(!datos.length){
-        h+='<div style="color:var(--mute);font-size:14px">Todavía no hay registros de este ejercicio</div>';
+      var ejg=ejDe(U.ejGrafica);
+      var ss=S.sesiones.filter(function(s){return s.ejercicioId===U.ejGrafica;})
+        .sort(function(a,b){return a.fecha>b.fecha?1:-1;});
+      if(!ss.length) h+='<div style="color:var(--mute);font-size:14px;margin-top:10px">Todavía no hay registros de este ejercicio</div>';
+      else if(esCardio(ejg)){
+        var dc=ss.filter(sesCardio).map(function(s){
+          var r=ritmo(s.cardio);
+          return {f:s.fecha.slice(5).replace("-","/"),min:+s.cardio.min||0,dist:+s.cardio.dist||0,
+                  ritmo:r==null?0:r,fc:+s.cardio.fc||0};});
+        if(dc.length){
+          var conR=dc.filter(function(d){return d.ritmo;});
+          var mejorR=conR.length?Math.min.apply(null,conR.map(function(d){return d.ritmo;})):null;
+          var distT=dc.reduce(function(a,d){return a+d.dist;},0);
+          var minT=dc.reduce(function(a,d){return a+d.min;},0);
+          h+='<div class="stats" style="margin-top:16px">'
+           + '<div class="stat"><b>'+(mejorR!=null?fmtRitmo(mejorR):"—")+'</b><span>Mejor ritmo</span></div>'
+           + '<div class="stat"><b>'+n1(distT)+'</b><span>km totales</span></div>'
+           + '<div class="stat"><b>'+nfmt(minT)+'</b><span>min totales</span></div>'
+           + '<div class="stat"><b>'+dc.length+'</b><span>Sesiones</span></div></div>';
+          if(dc.some(function(d){return d.dist;}))
+            h+='<div class="label">Distancia por sesión (km)</div>'+grafica(dc,"dist","#E8724F");
+          if(conR.length)
+            h+='<div class="label" style="margin-top:22px">Ritmo min/km · más abajo es mejor</div>'
+             + grafica(conR,"ritmo","#D8A430","ritmo");
+          h+='<div class="label" style="margin-top:22px">Duración (min)</div>'+grafica(dc,"min","#3E7CB1");
+          var conFC=dc.filter(function(d){return d.fc;});
+          if(conFC.length)
+            h+='<div class="label" style="margin-top:22px">Pulso promedio (ppm)</div>'+grafica(conFC,"fc","#D95B5B");
+        }
       } else {
-        var mx=Math.max.apply(null,datos.map(function(d){return d.peso;}));
-        var vt=datos.reduce(function(a,d){return a+d.vol;},0);
-        h+='<div class="stats">'
-         + '<div class="stat"><b>'+mx.toFixed(1)+' kg</b><span>Máximo</span><span>'+(mx/KG_POR_LB).toFixed(1)+' lb</span></div>'
-         + '<div class="stat"><b>'+datos.length+'</b><span>Sesiones</span></div>'
-         + '<div class="stat"><b>'+nfmt(vt)+'</b><span>Volumen total</span><span>kg movidos</span></div></div>'
-         + '<div class="label">Peso máximo por sesión</div>'+grafica(datos,"peso","#D8A430")
-         + '<div class="label" style="margin-top:24px">Volumen por sesión</div>'+grafica(datos,"vol","#3E7CB1");
+        var df=ss.filter(function(s){return !sesCardio(s);}).map(function(s){
+          return {f:s.fecha.slice(5).replace("-","/"),peso:maxKg(s.sets),
+                  vol:volumen(s.sets),rm:rm1(s.sets),pr:esRecord(s)};});
+        if(df.length){
+          var mx=Math.max.apply(null,df.map(function(d){return d.peso;}));
+          var mrm=Math.max.apply(null,df.map(function(d){return d.rm;}));
+          var vt=df.reduce(function(a,d){return a+d.vol;},0);
+          var est2=estancado(U.ejGrafica);
+          h+='<div class="stats" style="margin-top:16px">'
+           + '<div class="stat"><b>'+n1(mx)+' kg</b><span>Peso máximo</span><span>'+n1(mx/KG_POR_LB)+' lb</span></div>'
+           + '<div class="stat"><b>'+n1(mrm)+' kg</b><span>Mejor 1RM</span></div>'
+           + '<div class="stat"><b>'+df.length+'</b><span>Sesiones</span></div>'
+           + '<div class="stat"><b>'+nfmt(vt)+'</b><span>Volumen kg</span></div></div>';
+          if(est2>=4) h+='<div class="cardAmbar" style="font-size:13px;color:var(--mute)">'
+            + '<b style="color:var(--amber)">Estancamiento</b> · '+est2+' sesiones sin superar tu mejor 1RM</div>';
+          h+='<div class="label">1RM estimado · el círculo dorado es un récord</div>'+grafica(df,"rm","#E8C25A")
+           + '<div class="label" style="margin-top:22px">Peso máximo por sesión</div>'+grafica(df,"peso","#D8A430")
+           + '<div class="label" style="margin-top:22px">Volumen por sesión (kg)</div>'+grafica(df,"vol","#3E7CB1");
+        }
       }
     }
   }
 
-  /* ---------- pie ---------- */
+  /* ---------------- RESUMEN ---------------- */
+  if(U.vista==="resumen"){
+    h+=hCalendario()+hSeriesSemana()+hPesoCorporal();
+  }
+
+  /* ---------------- PIE ---------------- */
   h+='<div class="pie"><div class="label">Respaldo</div><div class="fila">'
    + '<button class="btn gris" data-act="csv">Reporte CSV</button>'
    + '<button class="btn gris" data-act="json">Copia completa</button>'
@@ -666,47 +837,190 @@ function render(){
   if(U.lupa) h+='<div class="lupa" data-act="cerrarLupa"><img src="'+U.lupa+'" alt=""></div>';
 
   document.getElementById("app").innerHTML=h;
-
-  var ni=document.getElementById("nuevoIn"); if(ni) ni.focus();
-  var ei=document.getElementById("etiquetaIn"); if(ei) ei.focus();
+  var f1=document.getElementById("nuevoIn"); if(f1) f1.focus();
+  var f2=document.getElementById("etiquetaIn"); if(f2) f2.focus();
 }
 
-/* ========== eventos ========== */
+function hChips(){
+  var h='<div class="fila">';
+  listaVisible().forEach(function(e){
+    h+='<button class="chip '+(U.activo===e.id?"on":"")+(S.fotos[e.id]?" foto":"")+'" data-ej="'+e.id+'">'
+     + (S.fotos[e.id]?'<img src="'+S.fotos[e.id]+'" alt="">':'<span class="pto" style="background:'+colorGrupo(e.grupo)+'"></span>')
+     + esc(e.nombre)+'</button>';
+  });
+  h+='<button class="dash" data-act="nuevo">+ Nuevo</button></div>';
+  return h;
+}
+
+/* ---------- calendario ---------- */
+function hCalendario(){
+  var base=U.calMes?new Date(U.calMes+"-01T00:00:00"):new Date();
+  var anio=base.getFullYear(),mes=base.getMonth();
+  var ini=(new Date(anio,mes,1).getDay()+6)%7;
+  var dm=new Date(anio,mes+1,0).getDate();
+  var dias={};
+  S.sesiones.forEach(function(s){
+    var e=ejDe(s.ejercicioId)||{};
+    (dias[s.fecha]=dias[s.fecha]||[]).push(colorGrupo(e.grupo));});
+  var h='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'
+   + '<button class="link gris" data-cal="-1" style="font-size:20px;padding:0 10px">‹</button>'
+   + '<b style="font-size:16px">'+MESES_L[mes]+" "+anio+'</b>'
+   + '<button class="link gris" data-cal="1" style="font-size:20px;padding:0 10px">›</button></div>';
+  h+='<div class="cal">'+["L","M","M","J","V","S","D"].map(function(d){return '<div class="dh">'+d+'</div>';}).join("");
+  for(var i=0;i<ini;i++) h+='<div class="d fuera"></div>';
+  var cuenta=0;
+  for(var d2=1;d2<=dm;d2++){
+    var iso=anio+"-"+String(mes+1).padStart(2,"0")+"-"+String(d2).padStart(2,"0");
+    var act=!!dias[iso]; if(act) cuenta++;
+    var cols=act?dias[iso].filter(function(v,j,a){return a.indexOf(v)===j;}).slice(0,3):[];
+    h+='<div class="d'+(act?" act":"")+(iso===hoyISO()?" hoy":"")+'">'+d2
+     + (cols.length?'<div style="display:flex;gap:2px;margin-top:2px">'
+        + cols.map(function(c){return '<span style="width:4px;height:4px;border-radius:50%;background:'+c+';display:block"></span>';}).join("")
+        + '</div>':"")+'</div>';
+  }
+  h+='</div><div style="font-size:13px;color:var(--mute);margin:10px 0 26px">'
+   + '<b style="color:var(--chalk)">'+cuenta+'</b> días entrenados en '+MESES_L[mes].toLowerCase()+'</div>';
+  return h;
+}
+
+/* ---------- series por grupo, últimos 7 días ---------- */
+function hSeriesSemana(){
+  var lim=new Date();lim.setDate(lim.getDate()-6);
+  var desde=lim.getFullYear()+"-"+String(lim.getMonth()+1).padStart(2,"0")+"-"+String(lim.getDate()).padStart(2,"0");
+  var acum={},minCard=0;
+  S.sesiones.forEach(function(s){
+    if(s.fecha<desde) return;
+    var e=ejDe(s.ejercicioId)||{};
+    if(sesCardio(s)){minCard+=+s.cardio.min||0;return;}
+    var g=e.grupo||"otro";
+    acum[g]=(acum[g]||0)+(s.sets?s.sets.length:0);
+  });
+  var claves=Object.keys(acum);
+  var h='<div style="font-size:15px;font-weight:700;margin-bottom:3px">Últimos 7 días</div>'
+   + '<div class="label" style="margin-bottom:12px">Series por grupo muscular</div>';
+  if(!claves.length&&!minCard) return h+'<div class="vacio" style="margin-bottom:26px">No has registrado nada esta semana</div>';
+  var max=Math.max.apply(null,claves.map(function(k){return acum[k];}).concat([1]));
+  GRUPOS.forEach(function(g){
+    if(!acum[g.id]) return;
+    var v=acum[g.id];
+    h+='<div style="margin-bottom:10px">'
+     + '<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">'
+     + '<span>'+g.label+'</span><b style="font-variant-numeric:tabular-nums">'+v+' series</b></div>'
+     + '<div class="barra"><i style="width:'+(v/max*100).toFixed(0)+'%;background:'+g.color+'"></i></div></div>';
+  });
+  if(minCard) h+='<div style="margin-bottom:10px">'
+    + '<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">'
+    + '<span>Cardio</span><b style="font-variant-numeric:tabular-nums">'+nfmt(minCard)+' min</b></div>'
+    + '<div class="barra"><i style="width:100%;background:#E8724F"></i></div></div>';
+  return h+'<div style="height:26px"></div>';
+}
+
+/* ---------- peso corporal ---------- */
+function hPesoCorporal(){
+  var h='<div style="font-size:15px;font-weight:700;margin-bottom:12px">Peso corporal</div>'
+   + '<div class="fila" style="flex-wrap:nowrap">'
+   + '<input id="pesoIn" type="number" inputmode="decimal" placeholder="kg" value="'+esc(U.pesoIn)+'">'
+   + '<button class="btn" style="width:auto" data-act="guardarPeso">Anotar</button></div>';
+  if(!S.peso.length) return h+'<div class="vacio">Anota tu peso cada semana para ver la tendencia</div>';
+  var datos=S.peso.map(function(p){return {f:p.fecha.slice(5).replace("-","/"),kg:p.kg};});
+  var ult=S.peso[S.peso.length-1],pri=S.peso[0],dif=ult.kg-pri.kg;
+  h+='<div class="stats">'
+   + '<div class="stat"><b>'+n1(ult.kg)+' kg</b><span>Actual · '+fmtFecha(ult.fecha)+'</span></div>'
+   + '<div class="stat"><b style="color:'+(dif>0?"#D8A430":(dif<0?"#8FD3A8":"var(--chalk)"))+'">'
+   + (dif>0?"+":"")+n1(dif)+' kg</b><span>Desde '+fmtFecha(pri.fecha)+'</span></div></div>';
+  if(datos.length>1) h+=grafica(datos,"kg","#5BD9D9");
+  h+='<div style="margin-top:14px">'+S.peso.slice(-6).reverse().map(function(p){
+    return '<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px">'
+     + '<span style="color:var(--mute)">'+fmtFecha(p.fecha)+'</span>'
+     + '<span style="font-variant-numeric:tabular-nums">'+n1(p.kg)+' kg</span></div>';}).join("")+'</div>';
+  return h;
+}
+
+/* ---------- modo entreno ---------- */
+function listaEntreno(){
+  return S.ejercicios.filter(function(e){
+    return U.diaSel===null?(e.dia===null||e.dia===undefined):e.dia===U.diaSel;});
+}
+function renderEntreno(){
+  var lista=listaEntreno();
+  if(!lista.length){U.entreno=null;render();return;}
+  if(U.entreno.i>=lista.length) U.entreno.i=lista.length-1;
+  if(U.entreno.i<0) U.entreno.i=0;
+  var ej=lista[U.entreno.i];
+  U.activo=ej.id;
+  var y=yaRegistrado(),ult=ultimaDe(ej.id,U.fecha),hechos=0;
+  lista.forEach(function(e){
+    if(S.sesiones.some(function(s){return s.ejercicioId===e.id&&s.fecha===U.fecha;})) hechos++;});
+  var col=colorGrupo(ej.grupo);
+  var h='<div class="entreno"><div style="max-width:560px;margin:0 auto">';
+  h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'
+   + '<button class="link gris" data-act="salirEntreno">✕ Salir</button>'
+   + '<span style="font-size:13px;color:var(--mute)">'+hechos+" de "+lista.length+' hechos</span></div>';
+  h+='<div class="barra" style="margin-bottom:18px"><i style="width:'+(hechos/lista.length*100).toFixed(0)+'%;background:#8FD3A8"></i></div>';
+  h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">'
+   + '<span class="pto" style="background:'+col+'"></span>'
+   + '<span style="font-size:12px;color:var(--mute)">'+labelGrupo(ej.grupo)+" · "+(U.entreno.i+1)+" de "+lista.length+'</span></div>';
+  h+='<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">'
+   + (S.fotos[ej.id]?'<img data-lupa="'+ej.id+'" src="'+S.fotos[ej.id]+'" style="width:56px;height:56px;border-radius:8px;object-fit:cover;flex:0 0 56px">':"")
+   + '<h1 style="font-size:24px;flex:1;min-width:0">'+esc(ej.nombre)+'</h1></div>';
+  if(ej.nota) h+='<div style="background:var(--surface);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;'
+   + 'padding:10px 12px;font-size:13px;color:var(--mute);margin-bottom:14px">'+esc(ej.nota)+'</div>';
+  if(y) h+='<div class="cardVerde"><div style="font-size:12px;color:var(--green);font-weight:600;'
+   + 'letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px">✓ Ya registrado</div>'+hResumenSesion(y)+'</div>';
+  if(ult) h+='<div class="cardAmbar"><div style="font-size:13px;color:var(--mute);margin-bottom:6px">'
+   + "La vez pasada · "+fmtFecha(ult.fecha)+'</div>'+hResumenSesion(ult)+'</div>';
+  h+=hFormulario();
+  h+='<div id="zonaGuardar">'+zonaGuardar()+'</div>';
+  h+='<div style="display:flex;gap:8px;margin-top:22px">'
+   + '<button class="btn gris" data-ent="-1" style="flex:1">‹ Anterior</button>'
+   + '<button class="btn gris" data-ent="1" style="flex:1">Siguiente ›</button></div>';
+  h+='</div></div>';
+  if(U.aviso) h+='<div style="position:fixed;left:16px;right:16px;bottom:24px;z-index:70;background:'
+   + (U.aviso.e?"#3A2220":"#1E2B25")+';color:'+(U.aviso.e?"#E39A8E":"#8FD3A8")
+   + ';padding:12px 14px;border-radius:8px;font-size:14px;text-align:center">'+esc(U.aviso.m)+'</div>';
+  if(U.lupa) h+='<div class="lupa" data-act="cerrarLupa"><img src="'+U.lupa+'" alt=""></div>';
+  document.getElementById("app").innerHTML="";
+  document.getElementById("capa").innerHTML=h;
+}
+
+/* ===================== EVENTOS ===================== */
 document.addEventListener("click",function(ev){
-  var t=ev.target.closest("[data-tab],[data-dia],[data-ej],[data-act],[data-quitar],[data-uni],[data-ir],[data-graf],[data-corregir],[data-borrarEj],[data-lupa],[data-gf],[data-gn]");
+  var t=ev.target.closest("[data-tab],[data-dia],[data-ej],[data-act],[data-quitar],[data-uni],"
+    +"[data-ir],[data-graf],[data-corregir],[data-borrarEj],[data-lupa],[data-gf],[data-gn],"
+    +"[data-tn],[data-cal],[data-ent]");
   if(!t) return;
   var d=t.dataset;
 
-  if(d.tab){ U.vista=d.tab; return render(); }
-  if(d.lupa){ U.lupa=S.fotos[d.lupa]; return render(); }
-  if(d.dia!==undefined){
-    U.diaSel=d.dia==="null"?null:+d.dia; U.activo=null; U.editEtiqueta=false;
-    cargarBorrador(); return render();
+  if(d.tab){U.vista=d.tab;U.busca="";return render();}
+  if(d.lupa){U.lupa=S.fotos[d.lupa];return render();}
+  if(d.dia!==undefined){U.diaSel=d.dia==="null"?null:+d.dia;U.activo=null;U.editEtiqueta=false;
+    U.busca="";cargarBorrador();return render();}
+  if(d.ej){U.activo=d.ej;cargarBorrador();return render();}
+  if(d.graf){U.ejGrafica=d.graf;return render();}
+  if(d.gf!==undefined){U.grupoFiltro=d.gf===""?null:d.gf;U.ejGrafica=null;return render();}
+  if(d.gn!==undefined){U.grupoNuevo=d.gn;return render();}
+  if(d.tn!==undefined){U.tipoNuevo=d.tn;return render();}
+  if(d.cal!==undefined){
+    var b=U.calMes?new Date(U.calMes+"-01T00:00:00"):new Date();
+    b.setMonth(b.getMonth()+(+d.cal));
+    U.calMes=b.getFullYear()+"-"+String(b.getMonth()+1).padStart(2,"0");
+    return render();
   }
-  if(d.ej){ U.activo=d.ej; cargarBorrador(); return render(); }
-  if(d.graf){ U.ejGrafica=d.graf; return render(); }
-  if(d.gf!==undefined){ U.grupoFiltro=d.gf===""?null:d.gf; U.ejGrafica=null; return render(); }
-  if(d.gn!==undefined){ U.grupoNuevo=d.gn; return render(); }
-  if(d.ir){
-    var e=S.ejercicios.filter(function(x){return x.id===d.ir;})[0];
-    if(e) U.diaSel=(e.dia===undefined?null:e.dia);
-    U.activo=d.ir; cargarBorrador(); return render();
-  }
+  if(d.ent!==undefined){U.entreno.i+=(+d.ent);cargarBorrador();return render();}
+  if(d.ir){var e0=ejDe(d.ir);if(e0)U.diaSel=(e0.dia===undefined?null:e0.dia);
+    U.activo=d.ir;U.busca="";cargarBorrador();return render();}
   if(d.corregir){
-    var s=S.sesiones.filter(function(x){return x.id===d.corregir;})[0];
-    if(s){ U.vista="registrar"; U.fecha=s.fecha; U.activo=s.ejercicioId;
-      var ej=S.ejercicios.filter(function(x){return x.id===s.ejercicioId;})[0];
-      if(ej) U.diaSel=(ej.dia===undefined?null:ej.dia);
-      cargarBorrador(); }
+    var s0=S.sesiones.filter(function(x){return x.id===d.corregir;})[0];
+    if(s0){U.vista="hoy";U.fecha=s0.fecha;U.activo=s0.ejercicioId;U.busca="";
+      var e1=ejDe(s0.ejercicioId);if(e1)U.diaSel=(e1.dia===undefined?null:e1.dia);
+      cargarBorrador();}
     return render();
   }
-  if(d.borrarEj){ return borrarEjercicio(d.borrarEj); }
-  if(d.quitar!==undefined){
-    var i=+d.quitar;
-    U.series = U.series.length===1 ? [{w:"",r:""}] : U.series.filter(function(_,j){return j!==i;});
-    return render();
-  }
-  if(d.uni){ S.unidad=d.uni; guardar(); return render(); }
+  if(d.borrarEj) return borrarEjercicio(d.borrarEj);
+  if(d.quitar!==undefined){var i0=+d.quitar;
+    U.series=U.series.length===1?[{w:"",r:""}]:U.series.filter(function(_,j){return j!==i0;});
+    return render();}
+  if(d.uni){S.unidad=d.uni;guardar();return render();}
 
   switch(d.act){
     case "nuevo": U.nuevo=!U.nuevo; return render();
@@ -714,48 +1028,85 @@ document.addEventListener("click",function(ev){
     case "editEtiqueta": U.editEtiqueta=true; return render();
     case "guardarEtiqueta":
       S.etiquetas[U.diaSel]=((document.getElementById("etiquetaIn")||{}).value||"").trim();
-      U.editEtiqueta=false; guardar(); return render();
+      U.editEtiqueta=false;guardar();return render();
     case "foto": return document.getElementById("inFoto").click();
-    case "quitarFoto": delete S.fotos[U.activo]; guardar(); return render();
+    case "quitarFoto": delete S.fotos[U.activo];guardar();return render();
     case "masSerie":
       var last=U.series[U.series.length-1]||{w:"",r:""};
-      U.series.push({w:last.w,r:last.r}); return render();
+      U.series.push({w:last.w,r:last.r});return render();
     case "guardar": return guardarSesion();
-    case "borrarSesion":
-      var yy=yaRegistrado(); if(yy) borrarSesion(yy.id); return;
+    case "borrarSesion": var yy=yaRegistrado();if(yy)borrarSesion(yy.id);return;
+    case "iniciarJornada": return iniciarJornada();
+    case "terminarJornada": return terminarJornada();
+    case "reiniciarJornada": delete S.jornadas[U.fecha];guardar();return render();
+    case "guardarPeso": return guardarPeso();
+    case "entreno": U.entreno={i:0};cargarBorrador();return render();
+    case "salirEntreno": U.entreno=null;return render();
     case "csv": return exportarCSV();
     case "json": return exportarJSON();
     case "restaurar": return document.getElementById("inJson").click();
-    case "cerrarLupa": U.lupa=null; return render();
+    case "cerrarLupa": U.lupa=null;return render();
   }
 });
 
-/* inputs de series: no re-renderizamos para no perder el foco */
 document.addEventListener("input",function(ev){
   var t=ev.target;
-  if(t.id==="fechaIn"){ U.fecha=t.value; cargarBorrador(); return render(); }
+  if(t.id==="fechaIn"){U.fecha=t.value;cargarBorrador();return render();}
+  if(t.id==="pesoIn"){U.pesoIn=t.value;return;}
+  if(t.id==="buscaIn"){
+    U.busca=t.value;
+    var c=document.getElementById("chipsEj");
+    if(c) c.innerHTML=hChips();
+    return;
+  }
+  if(t.dataset.nota!==undefined){
+    var en=ejDe(t.dataset.nota);if(en){en.nota=t.value;guardar();}
+    return;
+  }
+  if(t.dataset.card!==undefined){
+    U.cardio[t.dataset.card]=t.value;
+    var dv=document.getElementById("derivado");if(dv)dv.textContent=textoDerivado();
+    var z1=document.getElementById("zonaGuardar");if(z1)z1.innerHTML=zonaGuardar();
+    return;
+  }
   if(t.dataset.serie===undefined) return;
   var i=+t.dataset.serie;
   U.series[i][t.dataset.campo]=t.value;
   if(t.dataset.campo==="w"){
-    var c=document.getElementById("conv"+i);
-    if(c) c.textContent = t.value!=="" ? "= "+equiv(t.value,S.unidad) : "";
+    var cv=document.querySelector('[data-conv="'+i+'"]');
+    if(cv) cv.textContent=t.value!==""?"= "+equiv(t.value,S.unidad):"";
   }
-  var z=document.getElementById("zonaGuardar");
-  if(z) z.innerHTML=zonaGuardar();
+  var dr=document.querySelector('[data-derivado]');
+  if(dr) dr.textContent=texto1RM();
+  var z=document.getElementById("zonaGuardar");if(z)z.innerHTML=zonaGuardar();
 });
 
 document.addEventListener("change",function(ev){
-  var m=ev.target.dataset.mover;
-  var gr=ev.target.dataset.grupo;
-  if(!m && !gr) return;
-  if(m){
-    var e=S.ejercicios.filter(function(x){return x.id===m;})[0];
-    if(e){ e.dia = ev.target.value===""?null:+ev.target.value; guardar(); render(); }
+  var ds=ev.target.dataset;
+  if(ds.mover!==undefined){
+    var e2=ejDe(ds.mover);
+    if(e2){e2.dia=ev.target.value===""?null:+ev.target.value;guardar();render();}
+    return;
   }
-  if(gr){
-    var e=S.ejercicios.filter(function(x){return x.id===gr;})[0];
-    if(e){ e.grupo = ev.target.value||"otro"; guardar(); render(); }
+  if(ds.grupo!==undefined){
+    var e3=ejDe(ds.grupo);
+    if(e3){
+      e3.grupo=ev.target.value||"otro";
+      if(e3.grupo==="cardio") e3.tipo="cardio";
+      else if(e3.tipo==="cardio") e3.tipo="fuerza";
+      cargarBorrador();guardar();render();
+    }
+    return;
+  }
+  if(ds.tipo!==undefined){
+    var e4=ejDe(ds.tipo);
+    if(e4){
+      e4.tipo=ev.target.value;
+      if(e4.tipo==="cardio") e4.grupo="cardio";
+      else if(e4.grupo==="cardio") e4.grupo="otro";
+      cargarBorrador();guardar();render();
+    }
+    return;
   }
 });
 
@@ -763,16 +1114,15 @@ document.addEventListener("keydown",function(ev){
   if(ev.key!=="Enter") return;
   if(ev.target.id==="nuevoIn") crearEjercicio(ev.target.value);
   if(ev.target.id==="etiquetaIn"){
-    S.etiquetas[U.diaSel]=ev.target.value.trim(); U.editEtiqueta=false; guardar(); render();
-  }
+    S.etiquetas[U.diaSel]=ev.target.value.trim();U.editEtiqueta=false;guardar();render();}
+  if(ev.target.id==="pesoIn") guardarPeso();
 });
 
-/* ========== arranque ========== */
+/* ===================== ARRANQUE ===================== */
 cargar();
 cargarBorrador();
 render();
 
-/* guarda la app en el celular para abrirla sin señal */
 if("serviceWorker" in navigator && location.protocol==="https:"){
   window.addEventListener("load",function(){
     navigator.serviceWorker.register("sw.js").catch(function(){});
