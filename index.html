@@ -163,13 +163,13 @@ function esCardio(ej){return !!(ej&&ej.tipo==="cardio");}
 function sesCardio(s){return !!s.cardio;}
 
 /* ===================== ESTADO ===================== */
-var S={ejercicios:[],sesiones:[],etiquetas:{},unidad:"kg",fotos:{},jornadas:{},peso:[]};
+var S={ejercicios:[],sesiones:[],etiquetas:{},unidad:"kg",fotos:{},jornadas:{},peso:[],ordenDias:{}};
 var U={vista:"hoy",diaSel:diaDeISO(hoyISO()),activo:null,fecha:hoyISO(),
        series:[{w:"",r:""}],cardio:{min:"",dist:"",nivel:"",fc:""},
        nuevo:false,grupoNuevo:"otro",tipoNuevo:"fuerza",editEtiqueta:false,
        ejGrafica:null,grupoFiltro:null,busca:"",lupa:null,aviso:null,
        estado:"ok",detalle:"",calMes:null,entreno:null,pesoIn:"",
-       editandoNombre:null,timer:null,timerSeg:90,diasAbiertos:{}};
+       editandoNombre:null,timer:null,timerSeg:90,diasAbiertos:{},ordenDiaSel:null};
 
 /* ===================== PERSISTENCIA ===================== */
 function guardar(){
@@ -196,6 +196,16 @@ function cargar(){
       S.fotos=d.fotos||{};
       S.jornadas=d.jornadas||{};
       S.peso=d.peso||[];
+      S.ordenDias=d.ordenDias||{};
+      /* migrar: si no hay ordenDias, construirlo desde el orden actual del array */
+      var sinOrden=Object.keys(S.ordenDias).length===0;
+      if(sinOrden){
+        DIAS.forEach(function(dia){
+          S.ordenDias[dia.i]=S.ejercicios
+            .filter(function(e){return e.dias&&e.dias.indexOf(dia.i)>=0;})
+            .map(function(e){return e.id;});
+        });
+      }
     }
     U.estado="ok";
   }catch(e){U.estado="error";U.detalle="No se pudo leer lo guardado: "+(e&&e.message||e);}
@@ -290,13 +300,13 @@ function renombrarEjercicio(id,nombre){
   e.nombre=nombre; U.editandoNombre=null; guardar(); render();
 }
 /* ---- reordenar (flechas) ---- */
-function moverEjercicio(id,dir){
-  var idx=S.ejercicios.findIndex(function(e){return e.id===id;});
-  if(idx<0) return;
+function moverEnDia(id,dia,dir){
+  var ord=S.ordenDias[dia]; if(!ord) return;
+  var idx=ord.indexOf(id); if(idx<0) return;
   var destino=idx+dir;
-  if(destino<0||destino>=S.ejercicios.length) return;
-  var tmp=S.ejercicios[idx]; S.ejercicios[idx]=S.ejercicios[destino];
-  S.ejercicios[destino]=tmp; guardar(); render();
+  if(destino<0||destino>=ord.length) return;
+  var tmp=ord[idx]; ord[idx]=ord[destino]; ord[destino]=tmp;
+  guardar(); render();
 }
 /* ---- temporizador de descanso ---- */
 var _timerIv=null;
@@ -794,9 +804,47 @@ function render(){
       h+='</div>';
     });
     if(S.ejercicios.length){
-      h+='<div style="margin-top:28px"><div class="label">Mis ejercicios</div>';
+      /* selector de día para ordenar */
+      var diasConEj=DIAS.filter(function(d){
+        return S.ejercicios.some(function(e){return e.dias&&e.dias.indexOf(d.i)>=0;});});
+      var odSel=U.ordenDiaSel!==null&&U.ordenDiaSel!==undefined?U.ordenDiaSel:
+        (diasConEj.length?diasConEj[0].i:null);
+      h+='<div style="margin-top:28px">';
+      h+='<div style="font-size:15px;font-weight:700;margin-bottom:10px">Mis ejercicios</div>';
+      /* tabs de día para ordenar */
+      if(diasConEj.length>0){
+        h+='<div class="label" style="margin-bottom:6px">Ordenar por día</div>';
+        h+='<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px">';
+        diasConEj.forEach(function(d){
+          var on=odSel===d.i;
+          h+='<button data-orddiasel="'+d.i+'" style="background:'+(on?'var(--blue)':'var(--surface)')+';color:'+(on?'var(--chalk)':'var(--mute)')+';border:1px solid '+(on?'var(--blue)':'var(--line)')+';border-radius:6px;padding:7px 14px;font-size:13px;font-weight:600;font-family:inherit">'
+           + d.l+'</button>';
+        });
+        h+='</div>';
+        /* lista ordenada del día seleccionado */
+        if(odSel!==null){
+          var ordDelDia=S.ordenDias[odSel]||[];
+          var ejsDelDia=S.ejercicios.filter(function(e){return e.dias&&e.dias.indexOf(odSel)>=0;});
+          var ejsOrdenados=ordDelDia.map(function(id){
+            return ejsDelDia.filter(function(e){return e.id===id;})[0];}).filter(Boolean);
+          var ejsSinOrden=ejsDelDia.filter(function(e){return ordDelDia.indexOf(e.id)<0;});
+          var listaOrd=ejsOrdenados.concat(ejsSinOrden);
+          listaOrd.forEach(function(e,posOrd){
+            h+='<div style="background:var(--surface);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px">'
+             + '<div style="display:flex;flex-direction:column;gap:2px">'
+             + '<button data-subedia="'+e.id+':'+odSel+'" '+(posOrd===0?'disabled':'')+' style="background:var(--surfaceHi);color:var(--chalk);border:none;border-radius:4px;padding:2px 8px;font-size:13px;line-height:1;font-family:inherit">▲</button>'
+             + '<button data-bajadia="'+e.id+':'+odSel+'" '+(posOrd===listaOrd.length-1?'disabled':'')+' style="background:var(--surfaceHi);color:var(--chalk);border:none;border-radius:4px;padding:2px 8px;font-size:13px;line-height:1;font-family:inherit">▼</button>'
+             + '</div>'
+             + '<span class="pto" style="background:'+colorGrupo(e.grupo)+'"></span>'
+             + '<span style="flex:1;font-size:14px;font-weight:600;color:var(--mute)">'+String(posOrd+1)+'. </span>'
+             + '<span style="flex:8;font-size:14px;font-weight:600">'+esc(e.nombre)+'</span>'
+             + '</div>';
+          });
+        }
+        h+='<div style="height:20px"></div>';
+      }
+      h+='<div class="label" style="margin-bottom:8px">Todos los ejercicios</div>';
       S.ejercicios.forEach(function(e){
-        var idx2=S.ejercicios.indexOf(e);
         h+='<div style="background:var(--surface);border-radius:8px;padding:10px 12px;margin-bottom:6px">';
         if(U.editandoNombre===e.id){
           h+='<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">'
@@ -819,8 +867,6 @@ function render(){
          + '<select data-grupo="'+e.id+'" style="width:auto;font-size:12px;padding:5px 6px;flex:1">'
          + GRUPOS.map(function(g){return '<option value="'+g.id+'"'+((e.grupo||"otro")===g.id?" selected":"")+'>'+g.label+'</option>';}).join("")
          + '</select>'
-         + '<button data-sube="'+e.id+'" '+(idx2===0?'disabled':'')+' style="background:var(--surfaceHi);color:var(--chalk);border:none;border-radius:6px;padding:5px 10px;font-size:14px;font-family:inherit">▲</button>'
-         + '<button data-baja="'+e.id+'" '+(idx2===S.ejercicios.length-1?'disabled':'')+' style="background:var(--surfaceHi);color:var(--chalk);border:none;border-radius:6px;padding:5px 10px;font-size:14px;font-family:inherit">▼</button>'
          + '<button class="link rojo" data-borrarEj="'+e.id+'">Eliminar</button></div>';
         h+='</div>';
       });
@@ -1028,8 +1074,13 @@ function hPesoCorporal(){
 
 /* ---------- modo entreno ---------- */
 function listaEntreno(){
-  return S.ejercicios.filter(function(e){
+  var ejsDia=S.ejercicios.filter(function(e){
     return U.diaSel===null?(!e.dias||e.dias.length===0):(e.dias&&e.dias.indexOf(U.diaSel)>=0);});
+  if(U.diaSel===null) return ejsDia;
+  var ord=S.ordenDias[U.diaSel]||[];
+  var ordenados=ord.map(function(id){return ejsDia.filter(function(e){return e.id===id;})[0];}).filter(Boolean);
+  var restantes=ejsDia.filter(function(e){return ord.indexOf(e.id)<0;});
+  return ordenados.concat(restantes);
 }
 function renderEntreno(){
   var lista=listaEntreno();
@@ -1078,8 +1129,8 @@ function renderEntreno(){
 document.addEventListener("click",function(ev){
   var t=ev.target.closest("[data-tab],[data-dia],[data-ej],[data-act],[data-quitar],[data-uni],"
     +"[data-ir],[data-graf],[data-corregir],[data-borrarEj],[data-lupa],[data-gf],[data-gn],"
-    +"[data-tn],[data-cal],[data-ent],[data-diatog],[data-sube],[data-baja],[data-toggle],"
-    +"[data-editnom],[data-renom],[data-tseg]");
+    +"[data-tn],[data-cal],[data-ent],[data-diatog],[data-toggle],"
+    +"[data-editnom],[data-renom],[data-tseg],[data-orddiasel],[data-subedia],[data-bajadia]");
   if(!t) return;
   var d=t.dataset;
 
@@ -1125,11 +1176,30 @@ document.addEventListener("click",function(ev){
     var ej5=ejDe(eid); if(!ej5) return;
     if(!ej5.dias) ej5.dias=[];
     var idx5=ej5.dias.indexOf(di);
-    if(idx5>=0) ej5.dias.splice(idx5,1); else ej5.dias.push(di);
+    if(idx5>=0){
+      /* quitar del día */
+      ej5.dias.splice(idx5,1);
+      if(S.ordenDias[di]){
+        var oi=S.ordenDias[di].indexOf(eid);
+        if(oi>=0) S.ordenDias[di].splice(oi,1);
+      }
+    } else {
+      /* agregar al día, al final del orden */
+      ej5.dias.push(di);
+      if(!S.ordenDias[di]) S.ordenDias[di]=[];
+      if(S.ordenDias[di].indexOf(eid)<0) S.ordenDias[di].push(eid);
+    }
     guardar(); return render();
   }
-  if(d.sube!==undefined){return moverEjercicio(d.sube,-1);}
-  if(d.baja!==undefined){return moverEjercicio(d.baja,1);}
+  if(d.orddiasel!==undefined){U.ordenDiaSel=+d.orddiasel;return render();}
+  if(d.subedia!==undefined){
+    var sp=d.subedia.split(":");
+    return moverEnDia(sp[0],+sp[1],-1);
+  }
+  if(d.bajadia!==undefined){
+    var bp=d.bajadia.split(":");
+    return moverEnDia(bp[0],+bp[1],1);
+  }
   if(d.tseg!==undefined){U.timerSeg=+d.tseg;if(U.timer!==null)U.timer=Math.min(U.timer,U.timerSeg);
     var z2=document.getElementById("timer");if(z2)z2.innerHTML=hTimer(); return;}
   if(d.quitar!==undefined){var i0=+d.quitar;
