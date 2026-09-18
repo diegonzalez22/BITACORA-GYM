@@ -169,7 +169,7 @@ var U={vista:"hoy",diaSel:diaDeISO(hoyISO()),activo:null,fecha:hoyISO(),
        nuevo:false,grupoNuevo:"otro",tipoNuevo:"fuerza",editEtiqueta:false,
        ejGrafica:null,grupoFiltro:null,busca:"",lupa:null,aviso:null,
        estado:"ok",detalle:"",calMes:null,entreno:null,pesoIn:"",
-       editandoNombre:null,timer:null,timerSeg:90};
+       editandoNombre:null,timer:null,timerSeg:90,diasAbiertos:{}};
 
 /* ===================== PERSISTENCIA ===================== */
 function guardar(){
@@ -754,24 +754,43 @@ function render(){
     if(!pf.length) h+='<div class="vacio">Aquí van a aparecer tus entrenamientos agrupados por día</div>';
     pf.forEach(function(par){
       var f=par[0],lista=par[1],d=diaDeISO(f),vol=volDia(lista),mc=minCardioDia(lista),mj=minJornada(f);
-      h+='<div style="margin-bottom:22px"><div class="cab"><div>'
-       + '<span style="font-size:17px;font-weight:700">'+DIAS[d].l+'</span>'
-       + '<span style="color:var(--mute);font-size:14px;margin-left:8px">'+fmtFecha(f)+'</span>'
-       + (S.etiquetas[d]?'<span style="color:var(--amber);font-size:14px;margin-left:8px">'+esc(S.etiquetas[d])+'</span>':"")
-       + '</div><div style="color:var(--mute);font-size:12px;text-align:right">'
-       + (vol?nfmt(vol)+" kg":"")+(vol&&mc?"<br>":"")+(mc?nfmt(mc)+" min cardio":"")
-       + (mj!=null?"<br>"+mj+" min total":"")+'</div></div>';
-      lista.forEach(function(s){
-        var e=ejDe(s.ejercicioId)||{};
-        h+='<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:8px">'
-         + '<div style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;min-width:0">'
-         + (S.fotos[s.ejercicioId]?'<img data-lupa="'+s.ejercicioId+'" src="'+S.fotos[s.ejercicioId]+'" style="width:28px;height:28px;border-radius:6px;object-fit:cover">'
-            :'<span class="pto" style="background:'+colorGrupo(e.grupo)+'"></span>')
-         + '<span style="overflow:hidden;text-overflow:ellipsis">'+esc(nombreDe(s.ejercicioId))+'</span>'
-         + (esRecord(s)?'<span class="pr">Récord</span>':"")+'</div>'
-         + '<button class="link" data-corregir="'+s.id+'" style="white-space:nowrap">Corregir</button></div>'
-         + hResumenSesion(s)+'</div>';
-      });
+      var abierto=U.diasAbiertos[f]!==undefined ? U.diasAbiertos[f] : (f===hoyISO());
+      var nEj=lista.length;
+      var records=lista.filter(esRecord).length;
+      h+='<div style="margin-bottom:8px">';
+      // cabecera clickeable
+      h+='<button data-toggle="'+f+'" style="width:100%;background:var(--surface);border:none;'
+       + 'border-radius:'+(abierto?'8px 8px 0 0':'8px')+';padding:12px 14px;text-align:left;'
+       + 'font-family:inherit;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px">'
+       + '<div style="min-width:0">'
+       + '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:3px">'
+       + '<span style="font-size:16px;font-weight:700;color:var(--chalk)">'+DIAS[d].l+'</span>'
+       + '<span style="color:var(--mute);font-size:13px">'+fmtFecha(f)+'</span>'
+       + (S.etiquetas[d]?'<span style="color:var(--amber);font-size:13px">'+esc(S.etiquetas[d])+'</span>':"")
+       + (records?'<span class="pr">'+records+' PR</span>':"")+'</div>'
+       + '<div style="font-size:12px;color:var(--mute);display:flex;gap:10px;flex-wrap:wrap">'
+       + '<span>'+nEj+' ejercicio'+(nEj!==1?'s':'')+'</span>'
+       + (vol?'<span>'+nfmt(vol)+' kg</span>':"")
+       + (mc?'<span>'+nfmt(mc)+' min</span>':"")
+       + (mj!=null?'<span>⏱ '+mj+' min</span>':"")+'</div></div>'
+       + '<span style="color:var(--mute);font-size:18px;flex:0 0 auto">'+(abierto?'▾':'▸')+'</span>'
+       + '</button>';
+      // detalle colapsable
+      if(abierto){
+        h+='<div style="background:var(--surface);border-top:1px solid var(--line);border-radius:0 0 8px 8px;padding:0 8px 8px">';
+        lista.forEach(function(s){
+          var e=ejDe(s.ejercicioId)||{};
+          h+='<div class="card" style="margin-top:8px;margin-bottom:0"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:8px">'
+           + '<div style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;min-width:0">'
+           + (S.fotos[s.ejercicioId]?'<img data-lupa="'+s.ejercicioId+'" src="'+S.fotos[s.ejercicioId]+'" style="width:28px;height:28px;border-radius:6px;object-fit:cover">'
+              :'<span class="pto" style="background:'+colorGrupo(e.grupo)+'"></span>')
+           + '<span style="overflow:hidden;text-overflow:ellipsis">'+esc(nombreDe(s.ejercicioId))+'</span>'
+           + (esRecord(s)?'<span class="pr">Récord</span>':"")+'</div>'
+           + '<button class="link" data-corregir="'+s.id+'" style="white-space:nowrap">Corregir</button></div>'
+           + hResumenSesion(s)+'</div>';
+        });
+        h+='</div>';
+      }
       h+='</div>';
     });
     if(S.ejercicios.length){
@@ -1059,7 +1078,7 @@ function renderEntreno(){
 document.addEventListener("click",function(ev){
   var t=ev.target.closest("[data-tab],[data-dia],[data-ej],[data-act],[data-quitar],[data-uni],"
     +"[data-ir],[data-graf],[data-corregir],[data-borrarEj],[data-lupa],[data-gf],[data-gn],"
-    +"[data-tn],[data-cal],[data-ent],[data-diatog],[data-sube],[data-baja],"
+    +"[data-tn],[data-cal],[data-ent],[data-diatog],[data-sube],[data-baja],[data-toggle],"
     +"[data-editnom],[data-renom],[data-tseg]");
   if(!t) return;
   var d=t.dataset;
@@ -1087,6 +1106,11 @@ document.addEventListener("click",function(ev){
     if(s0){U.vista="hoy";U.fecha=s0.fecha;U.activo=s0.ejercicioId;U.busca="";
       var e1=ejDe(s0.ejercicioId);if(e1)U.diaSel=(e1.dia===undefined?null:e1.dia);
       cargarBorrador();}
+    return render();
+  }
+  if(d.toggle!==undefined){
+    U.diasAbiertos[d.toggle]=U.diasAbiertos[d.toggle]===undefined
+      ?(d.toggle!==hoyISO()):!U.diasAbiertos[d.toggle];
     return render();
   }
   if(d.borrarEj) return borrarEjercicio(d.borrarEj);
