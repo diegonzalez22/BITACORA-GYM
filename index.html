@@ -170,7 +170,8 @@ var U={vista:"hoy",diaSel:diaDeISO(hoyISO()),activo:null,fecha:hoyISO(),
        nuevo:false,grupoNuevo:"otro",tipoNuevo:"fuerza",editEtiqueta:false,
        ejGrafica:null,grupoFiltro:null,busca:"",lupa:null,aviso:null,
        estado:"ok",detalle:"",calMes:null,entreno:null,pesoIn:"",
-       editandoNombre:null,timer:null,timerSeg:90,diasAbiertos:{},ordenDiaSel:null,nombreNuevo:""};
+       editandoNombre:null,timer:null,timerSeg:90,diasAbiertos:{},ordenDiaSel:null,nombreNuevo:"",
+       moviendoFecha:false,nuevaFecha:""};
 
 /* ===================== PERSISTENCIA ===================== */
 function guardar(){
@@ -378,6 +379,24 @@ function guardarSesion(){
   aviso(esRecord(ns)?"¡Récord nuevo en "+ej.nombre+"!":ej.nombre+" guardado");
   iniciarTimer();
 }
+function moverSesionFecha(nuevaF){
+  var y=yaRegistrado();
+  if(!y){aviso("No hay registro que mover",true);return;}
+  if(!nuevaF){aviso("Escoge una fecha",true);return;}
+  if(nuevaF===y.fecha){U.moviendoFecha=false;render();return;}
+  /* si ya hay un registro de ese ejercicio en la fecha destino, avisar */
+  var choque=S.sesiones.filter(function(s){
+    return s.ejercicioId===y.ejercicioId && s.fecha===nuevaF && s.id!==y.id;})[0];
+  if(choque){
+    aviso("Ya tienes un registro de este ejercicio ese día",true);
+    return;
+  }
+  y.fecha=nuevaF;
+  U.moviendoFecha=false; U.nuevaFecha="";
+  U.fecha=nuevaF;
+  cargarBorrador(); guardar();
+  aviso("Registro movido al "+fmtFecha(nuevaF));
+}
 function borrarSesion(id){
   S.sesiones=S.sesiones.filter(function(s){return s.id!==id;});
   cargarBorrador();guardar();render();
@@ -547,8 +566,21 @@ function zonaGuardar(){
     h+='<button class="btn" data-act="guardar" style="margin-top:10px">'
      + (y?"Actualizar registro":"Guardar ejercicio")+'</button>';
   }
-  h+= y?'<button class="link rojo" data-act="borrarSesion" style="width:100%;margin-top:10px">Borrar este registro</button>'
-      :'<div style="font-size:12px;color:var(--mute);margin-top:10px;text-align:center">Guarda uno y sigue con el siguiente del día</div>';
+  if(y){
+    if(U.moviendoFecha){
+      h+='<div style="background:var(--surface);border-radius:8px;padding:12px;margin-top:12px">'
+       + '<div style="font-size:13px;color:var(--mute);margin-bottom:8px">Mover este registro a otra fecha</div>'
+       + '<input type="date" id="moverFechaIn" value="'+(U.nuevaFecha||U.fecha)+'" style="margin-bottom:10px">'
+       + '<div style="display:flex;gap:8px">'
+       + '<button class="btn" data-act="confirmarMover" style="flex:1">Mover</button>'
+       + '<button class="btn gris" data-act="cancelarMover" style="flex:1">Cancelar</button></div></div>';
+    } else {
+      h+='<button class="link" data-act="moverFecha" style="width:100%;margin-top:10px">Mover a otra fecha</button>';
+    }
+    h+='<button class="link rojo" data-act="borrarSesion" style="width:100%;margin-top:4px">Borrar este registro</button>';
+  } else {
+    h+='<div style="font-size:12px;color:var(--mute);margin-top:10px;text-align:center">Guarda uno y sigue con el siguiente del día</div>';
+  }
   return h;
 }
 function textoDerivado(){
@@ -1184,7 +1216,7 @@ document.addEventListener("click",function(ev){
   if(d.lupa){U.lupa=S.fotos[d.lupa];return render();}
   if(d.dia!==undefined){U.diaSel=d.dia==="null"?null:+d.dia;U.activo=null;U.editEtiqueta=false;
     U.busca="";cargarBorrador();return render();}
-  if(d.ej){U.activo=d.ej;cargarBorrador();return render();}
+  if(d.ej){U.activo=d.ej;U.moviendoFecha=false;cargarBorrador();return render();}
   if(d.graf){U.ejGrafica=d.graf;return render();}
   if(d.gf!==undefined){U.grupoFiltro=d.gf===""?null:d.gf;U.ejGrafica=null;return render();}
   if(d.gn!==undefined){U.grupoNuevo=d.gn;return render();}
@@ -1267,6 +1299,11 @@ document.addEventListener("click",function(ev){
       U.series.push({w:last.w,r:last.r});return render();
     case "guardar": return guardarSesion();
     case "borrarSesion": var yy=yaRegistrado();if(yy)borrarSesion(yy.id);return;
+    case "moverFecha": U.moviendoFecha=true;U.nuevaFecha=U.fecha;return render();
+    case "cancelarMover": U.moviendoFecha=false;U.nuevaFecha="";return render();
+    case "confirmarMover":
+      var mf=document.getElementById("moverFechaIn");
+      return moverSesionFecha(mf?mf.value:"");
     case "iniciarJornada": return iniciarJornada();
     case "terminarJornada": return terminarJornada();
     case "reiniciarJornada": delete S.jornadas[U.fecha];guardar();return render();
@@ -1285,7 +1322,8 @@ document.addEventListener("click",function(ev){
 
 document.addEventListener("input",function(ev){
   var t=ev.target;
-  if(t.id==="fechaIn"){U.fecha=t.value;cargarBorrador();return render();}
+  if(t.id==="moverFechaIn"){U.nuevaFecha=t.value;return;}
+  if(t.id==="fechaIn"){U.fecha=t.value;U.moviendoFecha=false;cargarBorrador();return render();}
   if(t.id==="pesoIn"){U.pesoIn=t.value;return;}
   if(t.id==="nuevoIn"){U.nombreNuevo=t.value;return;}
   if(t.id==="buscaIn"){
