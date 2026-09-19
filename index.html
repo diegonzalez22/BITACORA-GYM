@@ -102,6 +102,7 @@
   .cal .d.act{background:var(--blue);color:var(--chalk);font-weight:700}
   .cal .d.hoy{border:1.5px solid var(--amber)}
   .cal .d.fuera{opacity:.2}
+  .cal .d.desc{background:transparent;border:1px solid var(--line)}
   .entreno{position:fixed;inset:0;background:var(--iron);z-index:55;overflow-y:auto;
     padding:calc(18px + env(safe-area-inset-top)) 16px 40px}
   button{cursor:pointer}
@@ -165,11 +166,11 @@ function sesCardio(s){return !!s.cardio;}
 /* ===================== ESTADO ===================== */
 var S={ejercicios:[],sesiones:[],etiquetas:{},unidad:"kg",fotos:{},jornadas:{},peso:[],ordenDias:{}};
 var U={vista:"hoy",diaSel:diaDeISO(hoyISO()),activo:null,fecha:hoyISO(),
-       series:[{w:"",r:""}],cardio:{min:"",dist:"",nivel:"",fc:""},
+       series:[{w:"",r:""}],cardio:{min:"",dist:"",nivel:"",fc:"",ritmo:"",ritmoU:"kmh"},
        nuevo:false,grupoNuevo:"otro",tipoNuevo:"fuerza",editEtiqueta:false,
        ejGrafica:null,grupoFiltro:null,busca:"",lupa:null,aviso:null,
        estado:"ok",detalle:"",calMes:null,entreno:null,pesoIn:"",
-       editandoNombre:null,timer:null,timerSeg:90,diasAbiertos:{},ordenDiaSel:null};
+       editandoNombre:null,timer:null,timerSeg:90,diasAbiertos:{},ordenDiaSel:null,nombreNuevo:""};
 
 /* ===================== PERSISTENCIA ===================== */
 function guardar(){
@@ -259,10 +260,11 @@ function estancado(id){
 function sinGuardar(){
   var y=yaRegistrado(),ej=ejDe(U.activo);
   if(esCardio(ej)){
-    var a=[U.cardio.min,U.cardio.dist,U.cardio.nivel,U.cardio.fc]
-      .map(function(v){return v===""?"":String(+v);}).join("|");
-    var c=(y&&y.cardio)?[y.cardio.min,y.cardio.dist,y.cardio.nivel,y.cardio.fc]
-      .map(function(v){return (v===""||v==null)?"":String(+v);}).join("|"):"|||";
+    var a=[U.cardio.min,U.cardio.dist,U.cardio.nivel,U.cardio.fc,U.cardio.ritmo]
+      .map(function(v){return v===""?"":String(+v);}).join("|")+"|"+(U.cardio.ritmoU||"kmh");
+    var c=(y&&y.cardio)?[y.cardio.min,y.cardio.dist,y.cardio.nivel,y.cardio.fc,y.cardio.ritmo]
+      .map(function(v){return (v===""||v==null)?"":String(+v);}).join("|")+"|"+(y.cardio.ritmoU||"kmh")
+      :"|||||kmh";
     return a!==c;
   }
   var x=U.series.filter(function(s){return s.w!==""&&s.r!=="";})
@@ -275,7 +277,9 @@ function cargarBorrador(){
   if(esCardio(ej)){
     U.cardio=(y&&y.cardio)?{min:String(y.cardio.min||""),dist:String(y.cardio.dist||""),
       nivel:(y.cardio.nivel==null?"":String(y.cardio.nivel)),
-      fc:(y.cardio.fc==null?"":String(y.cardio.fc))}:{min:"",dist:"",nivel:"",fc:""};
+      fc:(y.cardio.fc==null?"":String(y.cardio.fc)),
+      ritmo:(y.cardio.ritmo==null?"":String(y.cardio.ritmo)),
+      ritmoU:(y.cardio.ritmoU||"kmh")}:{min:"",dist:"",nivel:"",fc:"",ritmo:"",ritmoU:"kmh"};
     U.series=[{w:"",r:""}];
   } else {
     U.series=(y&&y.sets)?y.sets.map(function(x){return {w:String(x.w),r:String(x.r)};}):[{w:"",r:""}];
@@ -290,7 +294,7 @@ function crearEjercicio(nombre){
   var e={id:uid(),nombre:nombre,dias:(U.diaSel===null?[]:[U.diaSel]),
          grupo:tipo==="cardio"?"cardio":(U.grupoNuevo||"otro"),tipo:tipo,nota:""};
   S.ejercicios.push(e);
-  U.activo=e.id;U.nuevo=false;U.grupoNuevo="otro";U.tipoNuevo="fuerza";U.busca="";
+  U.activo=e.id;U.nuevo=false;U.grupoNuevo="otro";U.tipoNuevo="fuerza";U.busca="";U.nombreNuevo="";
   cargarBorrador();guardar();render();
 }
 /* ---- renombrar ---- */
@@ -354,7 +358,9 @@ function guardarSesion(){
     if(U.cardio.min===""&&U.cardio.dist===""){aviso("Pon al menos duración o distancia",true);return;}
     var c={min:+U.cardio.min||0,dist:+U.cardio.dist||0,
            nivel:U.cardio.nivel===""?null:+U.cardio.nivel,
-           fc:U.cardio.fc===""?null:+U.cardio.fc};
+           fc:U.cardio.fc===""?null:+U.cardio.fc,
+           ritmo:U.cardio.ritmo===""?null:+U.cardio.ritmo,
+           ritmoU:U.cardio.ritmoU||"kmh"};
     if(y){y.cardio=c;delete y.sets;guardar();aviso(ej.nombre+" actualizado");return;}
     S.sesiones.push({id:uid(),ejercicioId:U.activo,fecha:U.fecha,cardio:c});
     guardar();aviso(ej.nombre+" guardado");return;
@@ -428,7 +434,7 @@ function exportarCSV(){
   if(!S.sesiones.length){aviso("Todavía no hay entrenamientos que exportar",true);return;}
   var f=[["Fecha","Dia","Rutina","Grupo","Ejercicio","Tipo","Serie","Peso","Unidad",
           "Peso_kg","Peso_lb","Reps","Volumen_kg","1RM_kg",
-          "Duracion_min","Distancia_km","Nivel","FC_prom","Min_jornada"]];
+          "Duracion_min","Distancia_km","Nivel","FC_prom","Ritmo_maq","Ritmo_unidad","Min_jornada"]];
   porFecha().forEach(function(par){
     var d=diaDeISO(par[0]),mj=minJornada(par[0]);
     par[1].forEach(function(s){
@@ -436,13 +442,14 @@ function exportarCSV(){
       if(sesCardio(s)){
         f.push([par[0],DIAS[d].l,S.etiquetas[d]||"",labelGrupo(ej.grupo),nombreDe(s.ejercicioId),
           "cardio","","","","","","","","",s.cardio.min||"",s.cardio.dist||"",
-          s.cardio.nivel==null?"":s.cardio.nivel,s.cardio.fc==null?"":s.cardio.fc,mj||""]);
+          s.cardio.nivel==null?"":s.cardio.nivel,s.cardio.fc==null?"":s.cardio.fc,
+          s.cardio.ritmo==null?"":s.cardio.ritmo,s.cardio.ritmoU||"",mj||""]);
       } else {
         s.sets.forEach(function(set,i){
           var kg=enKg(set);
           f.push([par[0],DIAS[d].l,S.etiquetas[d]||"",labelGrupo(ej.grupo),nombreDe(s.ejercicioId),
             "fuerza",i+1,set.w,uni(set),kg.toFixed(2),(kg/KG_POR_LB).toFixed(2),set.r,
-            (kg*set.r).toFixed(2),(kg*(1+set.r/30)).toFixed(2),"","","","",mj||""]);
+            (kg*set.r).toFixed(2),(kg*(1+set.r/30)).toFixed(2),"","","","","","",mj||""]);
         });
       }
     });
@@ -522,6 +529,10 @@ function hCardio(c){
   if(c.dist) p.push('<div><div class="p">'+n1(c.dist)+' km</div><div class="e">distancia</div></div>');
   if(r!=null) p.push('<div><div class="p">'+fmtRitmo(r)+'</div><div class="e">min/km</div></div>');
   if(v!=null) p.push('<div><div class="p">'+n1(v)+' km/h</div><div class="e">velocidad</div></div>');
+  if(c.ritmo!=null&&c.ritmo!==""){
+    var uLab={kmh:"km/h",rpm:"RPM",spm:"SPM",w:"W"}[c.ritmoU||"kmh"];
+    p.push('<div><div class="p">'+n1(c.ritmo)+' '+uLab+'</div><div class="e">máquina</div></div>');
+  }
   if(c.nivel!=null&&c.nivel!=="") p.push('<div><div class="p">Niv '+c.nivel+'</div><div class="e">nivel</div></div>');
   if(c.fc!=null&&c.fc!=="") p.push('<div><div class="p">'+c.fc+' ppm</div><div class="e">pulso</div></div>');
   return '<div class="sets">'+p.join("")+'</div>';
@@ -553,14 +564,23 @@ function texto1RM(){
 function hFormulario(){
   var ej=ejDe(U.activo),h="";
   if(esCardio(ej)){
-    var campos=[["min","Duración (min)","decimal"],["dist","Distancia (km)","decimal"],
-                ["nivel","Nivel / inclinación","numeric"],["fc","Pulso promedio (ppm)","numeric"]];
+    var campos=[["min","Duración (min)","0.1"],["dist","Distancia (km)","0.01"],
+                ["nivel","Nivel / inclinación","0.5"],["fc","Pulso promedio (ppm)","1"]];
     h+='<div style="display:flex;flex-wrap:wrap;gap:10px">';
     campos.forEach(function(c){
       h+='<div style="flex:1 1 46%;min-width:140px">'
        + '<div style="font-size:12px;color:var(--mute);margin-bottom:5px">'+c[1]+'</div>'
-       + '<input type="number" inputmode="'+c[2]+'" data-card="'+c[0]+'" value="'+esc(U.cardio[c[0]])+'"></div>';
+       + '<input type="number" step="'+c[2]+'" inputmode="decimal" data-card="'+c[0]+'" value="'+esc(U.cardio[c[0]])+'"></div>';
     });
+    /* ritmo de máquina con su unidad */
+    h+='<div style="flex:1 1 100%">'
+     + '<div style="font-size:12px;color:var(--mute);margin-bottom:5px">Ritmo de máquina</div>'
+     + '<div style="display:flex;gap:8px;align-items:center">'
+     + '<input type="number" step="0.1" inputmode="decimal" data-card="ritmo" value="'+esc(U.cardio.ritmo||"")+'" style="flex:2">'
+     + '<select data-card="ritmoU" style="flex:1;width:auto;font-size:14px;padding:10px 8px">'
+     + [["kmh","km/h"],["rpm","RPM"],["spm","SPM"],["w","vatios"]].map(function(u){
+         return '<option value="'+u[0]+'"'+((U.cardio.ritmoU||"kmh")===u[0]?" selected":"")+'>'+u[1]+'</option>';}).join("")
+     + '</select></div></div>';
     h+='</div><div id="derivado" style="font-size:12px;color:var(--mute);margin-top:10px;'
      + 'font-variant-numeric:tabular-nums">'+textoDerivado()+'</div>';
     return h;
@@ -668,7 +688,7 @@ function render(){
            }).join("")+'</div>';
       }
       h+='<div class="fila" style="flex-wrap:nowrap;margin:0">'
-       + '<input id="nuevoIn" placeholder="'+(U.tipoNuevo==="cardio"?"Caminadora, Elíptica…":"Press banca, Prensa…")+'">'
+       + '<input id="nuevoIn" value="'+esc(U.nombreNuevo)+'" placeholder="'+(U.tipoNuevo==="cardio"?"Caminadora, Elíptica…":"Press banca, Prensa…")+'">'
        + '<button class="btn" style="width:auto" data-act="crear">Crear</button></div></div>';
     }
 
@@ -867,7 +887,7 @@ function render(){
          + '<select data-grupo="'+e.id+'" style="width:auto;font-size:12px;padding:5px 6px;flex:1">'
          + GRUPOS.map(function(g){return '<option value="'+g.id+'"'+((e.grupo||"otro")===g.id?" selected":"")+'>'+g.label+'</option>';}).join("")
          + '</select>'
-         + '<button class="link rojo" data-borrarEj="'+e.id+'">Eliminar</button></div>';
+         + '<button class="link rojo" data-borrarej="'+e.id+'">Eliminar</button></div>';
         h+='</div>';
       });
       h+='</div>';
@@ -878,7 +898,7 @@ function render(){
   if(U.vista==="progreso"){
     var gruposConEj=GRUPOS.filter(function(g){
       return S.ejercicios.some(function(e){return (e.grupo||"otro")===g.id;});});
-    if(gruposConEj.length){
+    if(gruposConEj.length && !U.ejGrafica){
       h+='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">'
        + '<button data-gf="" style="background:'+(U.grupoFiltro===null?"var(--surfaceHi)":"var(--surface)")
        + ';color:var(--chalk);border:1px solid var(--line);border-radius:16px;padding:6px 12px;font-size:13px;font-weight:600;font-family:inherit">Todos</button>'
@@ -891,13 +911,26 @@ function render(){
     var ejF=S.ejercicios.filter(function(e){return U.grupoFiltro===null||(e.grupo||"otro")===U.grupoFiltro;});
     if(!S.ejercicios.length) h+='<div class="vacio">Registra tu primer entrenamiento para ver el progreso</div>';
     else if(!ejF.length) h+='<div class="vacio">No hay ejercicios en ese grupo todavía</div>';
+    else if(U.ejGrafica){
+      /* seleccionado: barra compacta, las gráficas quedan arriba */
+      var ejSel=ejDe(U.ejGrafica);
+      if(ejSel){
+        h+='<button data-act="volverProgreso" style="width:100%;background:var(--surface);border:1px solid var(--line);'
+         + 'border-radius:8px;padding:11px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px;'
+         + 'font-family:inherit;text-align:left;color:var(--chalk)">'
+         + '<span style="color:var(--mute);font-size:16px">‹</span>'
+         + '<span class="pto" style="background:'+colorGrupo(ejSel.grupo)+'"></span>'
+         + '<span style="flex:1;font-size:15px;font-weight:700">'+esc(ejSel.nombre)+'</span>'
+         + '<span style="font-size:12px;color:var(--mute)">cambiar</span></button>';
+      }
+    }
     else {
       var pg={};ejF.forEach(function(e){var g=e.grupo||"otro";(pg[g]=pg[g]||[]).push(e);});
       GRUPOS.forEach(function(g){
         if(!pg[g.id]) return;
         h+='<div class="titGrupo" style="color:'+g.color+'">'+g.label+'</div><div class="fila">';
         pg[g.id].forEach(function(e){
-          h+='<button class="chip '+(U.ejGrafica===e.id?"on":"")+'" data-graf="'+e.id+'">'
+          h+='<button class="chip" data-graf="'+e.id+'">'
            + '<span class="pto" style="background:'+g.color+'"></span>'+esc(e.nombre)+'</button>';});
         h+='</div>';
       });
@@ -973,7 +1006,8 @@ function render(){
   if(U.lupa) h+='<div class="lupa" data-act="cerrarLupa"><img src="'+U.lupa+'" alt=""></div>';
 
   document.getElementById("app").innerHTML=h;
-  var f1=document.getElementById("nuevoIn"); if(f1) f1.focus();
+  var f1=document.getElementById("nuevoIn");
+  if(f1){f1.focus(); try{f1.setSelectionRange(f1.value.length,f1.value.length);}catch(err){}}
   var f2=document.getElementById("etiquetaIn"); if(f2) f2.focus();
 }
 
@@ -1009,13 +1043,25 @@ function hCalendario(){
     var iso=anio+"-"+String(mes+1).padStart(2,"0")+"-"+String(d2).padStart(2,"0");
     var act=!!dias[iso]; if(act) cuenta++;
     var cols=act?dias[iso].filter(function(v,j,a){return a.indexOf(v)===j;}).slice(0,3):[];
-    h+='<div class="d'+(act?" act":"")+(iso===hoyISO()?" hoy":"")+'">'+d2
+    var pasado=iso<=hoyISO();
+    h+='<div class="d'+(act?" act":(pasado?" desc":""))+(iso===hoyISO()?" hoy":"")+'">'+d2
      + (cols.length?'<div style="display:flex;gap:2px;margin-top:2px">'
         + cols.map(function(c){return '<span style="width:4px;height:4px;border-radius:50%;background:'+c+';display:block"></span>';}).join("")
         + '</div>':"")+'</div>';
   }
-  h+='</div><div style="font-size:13px;color:var(--mute);margin:10px 0 26px">'
-   + '<b style="color:var(--chalk)">'+cuenta+'</b> días entrenados en '+MESES_L[mes].toLowerCase()+'</div>';
+  h+='</div>';
+  /* resumen entrenados vs descanso */
+  var hoyStr=hoyISO();
+  var diasTranscurridos=0;
+  for(var dd=1;dd<=dm;dd++){
+    var isoD=anio+"-"+String(mes+1).padStart(2,"0")+"-"+String(dd).padStart(2,"0");
+    if(isoD<=hoyStr) diasTranscurridos++;
+  }
+  var descanso=Math.max(0,diasTranscurridos-cuenta);
+  h+='<div style="display:flex;gap:8px;margin:12px 0 26px">'
+   + '<div class="stat" style="flex:1"><b style="color:var(--blue)">'+cuenta+'</b><span>días entrenados</span></div>'
+   + '<div class="stat" style="flex:1"><b style="color:var(--mute)">'+descanso+'</b><span>días de descanso</span></div>'
+   + '</div>';
   return h;
 }
 
@@ -1128,7 +1174,7 @@ function renderEntreno(){
 /* ===================== EVENTOS ===================== */
 document.addEventListener("click",function(ev){
   var t=ev.target.closest("[data-tab],[data-dia],[data-ej],[data-act],[data-quitar],[data-uni],"
-    +"[data-ir],[data-graf],[data-corregir],[data-borrarEj],[data-lupa],[data-gf],[data-gn],"
+    +"[data-ir],[data-graf],[data-corregir],[data-borrarej],[data-lupa],[data-gf],[data-gn],"
     +"[data-tn],[data-cal],[data-ent],[data-diatog],[data-toggle],"
     +"[data-editnom],[data-renom],[data-tseg],[data-orddiasel],[data-subedia],[data-bajadia]");
   if(!t) return;
@@ -1164,7 +1210,7 @@ document.addEventListener("click",function(ev){
       ?(d.toggle!==hoyISO()):!U.diasAbiertos[d.toggle];
     return render();
   }
-  if(d.borrarEj) return borrarEjercicio(d.borrarEj);
+  if(d.borrarej) return borrarEjercicio(d.borrarej);
   if(d.editnom!==undefined){U.editandoNombre=d.editnom;return render();}
   if(d.renom!==undefined){
     var inp=document.getElementById("renomIn_"+d.renom)||document.getElementById("renomInH");
@@ -1208,7 +1254,7 @@ document.addEventListener("click",function(ev){
   if(d.uni){S.unidad=d.uni;guardar();return render();}
 
   switch(d.act){
-    case "nuevo": U.nuevo=!U.nuevo; return render();
+    case "nuevo": U.nuevo=!U.nuevo; if(!U.nuevo)U.nombreNuevo=""; return render();
     case "crear": return crearEjercicio((document.getElementById("nuevoIn")||{}).value);
     case "editEtiqueta": U.editEtiqueta=true; return render();
     case "guardarEtiqueta":
@@ -1229,6 +1275,7 @@ document.addEventListener("click",function(ev){
     case "salirEntreno": U.entreno=null;return render();
     case "csv": return exportarCSV();
     case "json": return exportarJSON();
+    case "volverProgreso": U.ejGrafica=null; return render();
     case "cancelarRenom": U.editandoNombre=null; return render();
     case "detenerTimer": return detenerTimer();
     case "restaurar": return document.getElementById("inJson").click();
@@ -1240,6 +1287,7 @@ document.addEventListener("input",function(ev){
   var t=ev.target;
   if(t.id==="fechaIn"){U.fecha=t.value;cargarBorrador();return render();}
   if(t.id==="pesoIn"){U.pesoIn=t.value;return;}
+  if(t.id==="nuevoIn"){U.nombreNuevo=t.value;return;}
   if(t.id==="buscaIn"){
     U.busca=t.value;
     var c=document.getElementById("chipsEj");
@@ -1282,6 +1330,12 @@ document.addEventListener("change",function(ev){
       else if(e3.tipo==="cardio") e3.tipo="fuerza";
       cargarBorrador();guardar();render();
     }
+    return;
+  }
+  if(ds.card!==undefined){
+    U.cardio[ds.card]=ev.target.value;
+    var dv0=document.getElementById("derivado");if(dv0)dv0.textContent=textoDerivado();
+    var z0=document.getElementById("zonaGuardar");if(z0)z0.innerHTML=zonaGuardar();
     return;
   }
   if(ds.tipo!==undefined){
