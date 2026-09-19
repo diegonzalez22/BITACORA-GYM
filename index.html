@@ -144,6 +144,8 @@ function uid(){return Math.random().toString(36).slice(2,10);}
 function esc(t){return String(t==null?"":t).replace(/[&<>"']/g,function(c){
   return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
 function nfmt(n){return Math.round(n).toLocaleString("es-MX");}
+/* el teclado en español escribe coma: la convertimos a punto */
+function numTxt(v){return String(v==null?"":v).replace(",",".");}
 function n1(n){return (Math.round(n*10)/10).toLocaleString("es-MX");}
 function uni(s){return s.u||"kg";}
 function enKg(s){return uni(s)==="lb"?(+s.w||0)*KG_POR_LB:(+s.w||0);}
@@ -602,13 +604,13 @@ function hFormulario(){
     campos.forEach(function(c){
       h+='<div style="flex:1 1 46%;min-width:140px">'
        + '<div style="font-size:12px;color:var(--mute);margin-bottom:5px">'+c[1]+'</div>'
-       + '<input type="number" step="'+c[2]+'" inputmode="decimal" data-card="'+c[0]+'" value="'+esc(U.cardio[c[0]])+'"></div>';
+       + '<input type="text" inputmode="decimal" data-card="'+c[0]+'" value="'+esc(U.cardio[c[0]])+'"></div>';
     });
     /* ritmo de máquina con su unidad */
     h+='<div style="flex:1 1 100%">'
      + '<div style="font-size:12px;color:var(--mute);margin-bottom:5px">Ritmo de máquina</div>'
      + '<div style="display:flex;gap:8px;align-items:center">'
-     + '<input type="number" step="0.1" inputmode="decimal" data-card="ritmo" value="'+esc(U.cardio.ritmo||"")+'" style="flex:2">'
+     + '<input type="text" inputmode="decimal" data-card="ritmo" value="'+esc(U.cardio.ritmo||"")+'" style="flex:2">'
      + '<select data-card="ritmoU" style="flex:1;width:auto;font-size:14px;padding:10px 8px">'
      + [["kmh","km/h"],["rpm","RPM"],["spm","SPM"],["w","vatios"]].map(function(u){
          return '<option value="'+u[0]+'"'+((U.cardio.ritmoU||"kmh")===u[0]?" selected":"")+'>'+u[1]+'</option>';}).join("")
@@ -628,8 +630,8 @@ function hFormulario(){
   U.series.forEach(function(s,i){
     h+='<div style="margin-bottom:8px"><div class="serieFila">'
      + '<div class="num">'+(i+1)+'</div>'
-     + '<input type="number" inputmode="decimal" placeholder="'+S.unidad+'" data-serie="'+i+'" data-campo="w" value="'+esc(s.w)+'">'
-     + '<input type="number" inputmode="numeric" placeholder="reps" data-serie="'+i+'" data-campo="r" value="'+esc(s.r)+'">'
+     + '<input type="text" inputmode="decimal" placeholder="'+S.unidad+'" data-serie="'+i+'" data-campo="w" value="'+esc(s.w)+'">'
+     + '<input type="text" inputmode="numeric" placeholder="reps" data-serie="'+i+'" data-campo="r" value="'+esc(s.r)+'">'
      + '<button class="x" data-quitar="'+i+'">×</button></div>'
      + '<div class="conv" data-conv="'+i+'">'+(s.w!==""?"= "+equiv(s.w,S.unidad):"")+'</div></div>';
   });
@@ -1133,7 +1135,7 @@ function hSeriesSemana(){
 function hPesoCorporal(){
   var h='<div style="font-size:15px;font-weight:700;margin-bottom:12px">Peso corporal</div>'
    + '<div class="fila" style="flex-wrap:nowrap">'
-   + '<input id="pesoIn" type="number" inputmode="decimal" placeholder="kg" value="'+esc(U.pesoIn)+'">'
+   + '<input id="pesoIn" type="text" inputmode="decimal" placeholder="kg" value="'+esc(U.pesoIn)+'">'
    + '<button class="btn" style="width:auto" data-act="guardarPeso">Anotar</button></div>';
   if(!S.peso.length) return h+'<div class="vacio">Anota tu peso cada semana para ver la tendencia</div>';
   var datos=S.peso.map(function(p){return {f:p.fecha.slice(5).replace("-","/"),kg:p.kg};});
@@ -1324,7 +1326,7 @@ document.addEventListener("input",function(ev){
   var t=ev.target;
   if(t.id==="moverFechaIn"){U.nuevaFecha=t.value;return;}
   if(t.id==="fechaIn"){U.fecha=t.value;U.moviendoFecha=false;cargarBorrador();return render();}
-  if(t.id==="pesoIn"){U.pesoIn=t.value;return;}
+  if(t.id==="pesoIn"){U.pesoIn=numTxt(t.value);return;}
   if(t.id==="nuevoIn"){U.nombreNuevo=t.value;return;}
   if(t.id==="buscaIn"){
     U.busca=t.value;
@@ -1337,17 +1339,17 @@ document.addEventListener("input",function(ev){
     return;
   }
   if(t.dataset.card!==undefined){
-    U.cardio[t.dataset.card]=t.value;
+    U.cardio[t.dataset.card]=numTxt(t.value);
     var dv=document.getElementById("derivado");if(dv)dv.textContent=textoDerivado();
     var z1=document.getElementById("zonaGuardar");if(z1)z1.innerHTML=zonaGuardar();
     return;
   }
   if(t.dataset.serie===undefined) return;
   var i=+t.dataset.serie;
-  U.series[i][t.dataset.campo]=t.value;
+  U.series[i][t.dataset.campo]=numTxt(t.value);
   if(t.dataset.campo==="w"){
     var cv=document.querySelector('[data-conv="'+i+'"]');
-    if(cv) cv.textContent=t.value!==""?"= "+equiv(t.value,S.unidad):"";
+    if(cv) cv.textContent=t.value!==""?"= "+equiv(numTxt(t.value),S.unidad):"";
   }
   var dr=document.querySelector('[data-derivado]');
   if(dr) dr.textContent=texto1RM();
