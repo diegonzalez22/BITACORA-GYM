@@ -354,8 +354,23 @@ function borrarEjercicio(id){
   if(U.ejGrafica===id) U.ejGrafica=null;
   guardar();render();
 }
+/* relee lo que está escrito en pantalla, por si algún evento se perdió */
+function sincronizarDesdePantalla(){
+  var cs=document.querySelectorAll("[data-card]");
+  for(var i=0;i<cs.length;i++){
+    var k=cs[i].getAttribute("data-card");
+    if(k==="ritmoU") U.cardio.ritmoU=cs[i].value||"kmh";
+    else U.cardio[k]=numTxt(cs[i].value);
+  }
+  var ss=document.querySelectorAll("[data-serie]");
+  for(var j=0;j<ss.length;j++){
+    var idx=+ss[j].getAttribute("data-serie"),campo=ss[j].getAttribute("data-campo");
+    if(U.series[idx]) U.series[idx][campo]=numTxt(ss[j].value);
+  }
+}
 function guardarSesion(){
   if(!U.activo){aviso("Elige un ejercicio primero",true);return;}
+  sincronizarDesdePantalla();
   var ej=ejDe(U.activo),y=yaRegistrado();
   if(esCardio(ej)){
     if(U.cardio.min===""&&U.cardio.dist===""){aviso("Pon al menos duración o distancia",true);return;}
@@ -560,14 +575,13 @@ function hCardio(c){
 }
 function hResumenSesion(s){return sesCardio(s)?hCardio(s.cardio):hSets(s.sets);}
 function zonaGuardar(){
-  var y=yaRegistrado(),h="";
-  if(y&&!sinGuardar()){
-    h+='<div style="border:1px solid #33503F;color:var(--green);border-radius:6px;padding:12px;'
-     + 'text-align:center;font-size:15px;font-weight:600;margin-top:10px">✓ Todo guardado</div>';
-  } else {
-    h+='<button class="btn" data-act="guardar" style="margin-top:10px">'
-     + (y?"Actualizar registro":"Guardar ejercicio")+'</button>';
+  var y=yaRegistrado(),h="",pend=sinGuardar();
+  if(y&&!pend){
+    h+='<div style="color:var(--green);font-size:13px;font-weight:600;text-align:center;margin-top:10px">✓ Todo guardado</div>';
   }
+  /* el botón queda SIEMPRE disponible para no bloquear una corrección */
+  h+='<button class="btn'+((y&&!pend)?' gris':'')+'" data-act="guardar" style="margin-top:8px">'
+   + (y?"Actualizar registro":"Guardar ejercicio")+'</button>';
   if(y){
     if(U.moviendoFecha){
       h+='<div style="background:var(--surface);border-radius:8px;padding:12px;margin-top:12px">'
@@ -1355,6 +1369,20 @@ document.addEventListener("input",function(ev){
   if(dr) dr.textContent=texto1RM();
   var z=document.getElementById("zonaGuardar");if(z)z.innerHTML=zonaGuardar();
 });
+
+/* al salir de un campo, asegurar que el valor quedó guardado en el borrador */
+document.addEventListener("blur",function(ev){
+  var t=ev.target;
+  if(t.dataset&&t.dataset.card!==undefined&&t.dataset.card!=="ritmoU"){
+    U.cardio[t.dataset.card]=numTxt(t.value);
+    var z=document.getElementById("zonaGuardar");if(z)z.innerHTML=zonaGuardar();
+  }
+  if(t.dataset&&t.dataset.serie!==undefined){
+    var i=+t.dataset.serie;
+    if(U.series[i]) U.series[i][t.dataset.campo]=numTxt(t.value);
+    var z2=document.getElementById("zonaGuardar");if(z2)z2.innerHTML=zonaGuardar();
+  }
+},true);
 
 document.addEventListener("change",function(ev){
   var ds=ev.target.dataset;
