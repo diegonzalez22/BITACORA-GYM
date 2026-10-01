@@ -127,35 +127,119 @@ var MESES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","di
 var MESES_L=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto",
  "Septiembre","Octubre","Noviembre","Diciembre"];
 /* ===== RUTINA DE DEDOS, MUÑECA Y ANTEBRAZO (mañanas) ===== */
+/* ===== RUTINA DE DEDOS, MUÑECA Y ANTEBRAZO (mañanas) ===== */
+var KIT={
+ pelota:{n:"Pelota de masaje con picos",
+   svg:'<circle cx="32" cy="32" r="17" fill="#C77DD9" opacity=".25"/><circle cx="32" cy="32" r="17" fill="none" stroke="#C77DD9" stroke-width="2.5"/>'+
+       [[32,11],[47,19],[53,34],[45,48],[30,53],[17,45],[11,30],[19,17]].map(function(p){return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3" fill="#C77DD9"/>';}).join("")},
+ gripper:{n:"Hand gripper ajustable",
+   svg:'<path d="M20 14 L20 44" stroke="#5B8DD9" stroke-width="5" stroke-linecap="round"/>'+
+       '<path d="M44 14 L44 44" stroke="#5B8DD9" stroke-width="5" stroke-linecap="round"/>'+
+       '<path d="M20 44 Q32 56 44 44" stroke="#8B95A3" stroke-width="3" fill="none"/>'+
+       '<path d="M22 20 Q32 10 42 20 Q32 26 22 20Z" fill="#8B95A3" opacity=".5"/>'+
+       '<circle cx="32" cy="46" r="4" fill="#5B8DD9"/>'},
+ bandaAzul:{n:"Banda extensora azul (suave)",
+   svg:'<ellipse cx="32" cy="32" rx="20" ry="13" fill="none" stroke="#5B8DD9" stroke-width="4"/>'+
+       [[18,24],[26,20],[34,20],[42,24]].map(function(p){return '<rect x="'+(p[0]-2)+'" y="'+(p[1]-9)+'" width="4" height="11" rx="2" fill="#8B95A3"/>';}).join("")},
+ bandaNaranja:{n:"Banda extensora naranja (fuerte)",
+   svg:'<ellipse cx="32" cy="32" rx="20" ry="13" fill="none" stroke="#E8724F" stroke-width="5"/>'+
+       [[18,24],[26,20],[34,20],[42,24]].map(function(p){return '<rect x="'+(p[0]-2)+'" y="'+(p[1]-9)+'" width="4" height="11" rx="2" fill="#8B95A3"/>';}).join("")},
+ extensor:{n:"Extensor independiente de 4 dedos",
+   svg:'<rect x="12" y="34" width="40" height="16" rx="5" fill="#5BD98A" opacity=".3" stroke="#5BD98A" stroke-width="2"/>'+
+       [18,28,38,48].map(function(x,k){return '<circle cx="'+x+'" cy="24" r="6" fill="none" stroke="#5BD98A" stroke-width="2.5"/>'+
+       '<line x1="'+x+'" y1="30" x2="'+x+'" y2="34" stroke="#5BD98A" stroke-width="2.5"/>';}).join("")},
+ anillo:{n:"Anillo de resistencia",
+   svg:'<circle cx="32" cy="32" r="18" fill="none" stroke="#D9A45B" stroke-width="7"/>'+
+       '<circle cx="32" cy="32" r="18" fill="none" stroke="#8B95A3" stroke-width="1" opacity=".5"/>'},
+ huevo:{n:"Huevo de agarre",
+   svg:'<ellipse cx="32" cy="33" rx="14" ry="18" fill="#D95B5B" opacity=".3" stroke="#D95B5B" stroke-width="2.5"/>'+
+       '<path d="M24 26 Q32 22 40 26" stroke="#D95B5B" stroke-width="2" fill="none" opacity=".7"/>'},
+ entrenadorU:{n:"Entrenador de muñeca en U",
+   svg:'<path d="M18 16 L18 38 Q18 48 32 48 Q46 48 46 38 L46 16" fill="none" stroke="#5BD9D9" stroke-width="4" stroke-linecap="round"/>'+
+       '<path d="M18 22 L46 22 M18 28 L46 28 M18 34 L46 34" stroke="#5BD9D9" stroke-width="1.5" opacity=".45"/>'+
+       '<circle cx="18" cy="16" r="3.5" fill="#5BD9D9"/><circle cx="46" cy="16" r="3.5" fill="#5BD9D9"/>'}
+};
+
+/* Plantillas de sesión. La app elige cuál va cada día según tu split del gym */
+var SESIONES={
+ A:{id:"A",nombre:"Agarre base",min:10,color:"#5B8DD9",ej:[
+   {k:"pelota",n:"Masaje con pelota de picos",det:"2 min por mano",nota:"SIEMPRE primero, calienta tendones",
+    guia:["Apoya la pelota entre la palma y una mesa, o sostenla con la otra mano",
+          "Rueda con presión firme por toda la palma durante 1 min",
+          "Pasa al antebrazo: rueda desde la muñeca hasta el codo por la cara interna",
+          "Repite por la cara externa. Debe molestar un poco, nunca doler"]},
+   {k:"gripper",n:"Gripper ajustable",det:"4 series × 10 reps",nota:"Excéntrico 3 seg al soltar",desc:"45 seg",
+    guia:["Agarra el gripper con el mango en la base de los dedos, no en la palma",
+          "Cierra completo hasta que los mangos se toquen",
+          "Suelta MUY lento contando 3 segundos. Ahí está el estímulo",
+          "Si no logras cerrar completo las 10 reps, baja la carga"]},
+   {k:"bandaAzul",n:"Extensión de dedos · banda azul",det:"3 series × 20 reps",nota:"Pausa 1 seg abierto",desc:"30 seg",
+    guia:["Mete los 4 dedos y el pulgar dentro de la banda, yemas juntas",
+          "Abre la mano separando todos los dedos contra la resistencia",
+          "Mantén 1 segundo en máxima apertura",
+          "Cierra lento. Esto equilibra el trabajo del gripper y protege los tendones"]}
+ ]},
+ B:{id:"B",nombre:"Sesión completa",min:15,color:"#C77DD9",ej:[
+   {k:"pelota",n:"Masaje con pelota de picos",det:"2 min por mano",nota:"Siempre primero",
+    guia:["Rueda la pelota por la palma con presión firme",
+          "Sube por el antebrazo, cara interna y externa",
+          "Insiste donde sientas nudos o tensión"]},
+   {k:"gripper",n:"Gripper ajustable pesado",det:"5 series × 6 reps",nota:"Isométrico 5 seg cerrado",desc:"60 seg",
+    guia:["Carga más alta que en la sesión de agarre base",
+          "Cierra completo y MANTÉN apretado contando 5 segundos",
+          "Suelta controlado, no de golpe",
+          "6 reps limpias. Si la última no cierra, es demasiado peso"]},
+   {k:"extensor",n:"Extensor independiente por dedo",det:"4 series × 12 reps por dedo",
+    nota:"Un dedo a la vez · meñique y anular 1 serie extra",desc:"20 seg entre dedos · 40 seg entre series",
+    guia:["Coloca la base del aparato en la palma",
+          "Presiona UN solo botón con un dedo, los demás quedan quietos",
+          "Baja lento y repite 12 veces antes de pasar al siguiente dedo",
+          "Meñique y anular llevan una serie extra porque son los más débiles"]},
+   {k:"entrenadorU",n:"Flexión de muñeca · entrenador U",det:"4 series × 12 reps",
+    nota:"3 seg subida y 3 seg bajada",desc:"45 seg",
+    guia:["Antebrazo apoyado en el muslo, palma hacia ARRIBA",
+          "Solo se mueve la muñeca, el antebrazo queda fijo",
+          "Sube contando 3 seg y baja contando 3 seg",
+          "Recorrido completo: estira abajo y cierra arriba"]},
+   {k:"entrenadorU",n:"Extensión inversa de muñeca · entrenador U",det:"4 series × 12 reps",
+    nota:"3 seg subida y 3 seg bajada",desc:"45 seg",
+    guia:["Mismo apoyo pero con la palma hacia ABAJO",
+          "Levanta el dorso de la mano hacia ti",
+          "3 seg arriba y 3 seg abajo",
+          "Esta es la que más engrosa la cara externa del antebrazo"]}
+ ]},
+ C:{id:"C",nombre:"Potencia y pump",min:12,color:"#E8724F",ej:[
+   {k:"pelota",n:"Masaje con pelota de picos",det:"2 min por mano",nota:"Siempre primero",
+    guia:["Rueda por palma y antebrazo con presión firme","Prepara los tendones para el trabajo al fallo"]},
+   {k:"anillo",n:"Anillo de resistencia · drop set",det:"3 drop sets",
+    nota:"Fallo, 10 seg, fallo, 10 seg, fallo",desc:"40 seg entre drop sets",
+    guia:["Aprieta el anillo con toda la mano hasta no poder más",
+          "Descansa 10 segundos sin soltarlo del todo",
+          "Vuelve al fallo. Repite el ciclo una tercera vez",
+          "Eso es 1 drop set. Vas a sentir mucha quemazón, es normal"]},
+   {k:"entrenadorU",n:"Pronación y supinación · entrenador U",det:"4 series × 20 reps",
+    nota:"Ida y vuelta = 1 rep",desc:"40 seg",
+    guia:["Codo pegado al cuerpo y doblado a 90 grados",
+          "Gira el antebrazo llevando la palma hacia arriba y luego hacia abajo",
+          "El codo NO se mueve, solo rota el antebrazo",
+          "Ida y vuelta completa cuenta como una repetición"]},
+   {k:"huevo",n:"Huevo isométrico",det:"3 bloques",nota:"(15 seg contracción + 5 seg descanso) × 3",desc:"30 seg entre bloques",
+    guia:["Aprieta el huevo con toda la fuerza durante 15 segundos",
+          "Afloja 5 segundos sin soltarlo",
+          "Repite 3 veces seguidas: eso es un bloque",
+          "Descansa 30 seg y vas con el siguiente bloque"]},
+   {k:"bandaNaranja",n:"Extensión de dedos · banda naranja",det:"4 series × 25 reps rápidas",
+    nota:"Pump final",desc:"30 seg",
+    guia:["Banda naranja, la de resistencia fuerte",
+          "Abre y cierra rápido, sin pausa arriba",
+          "25 reps seguidas buscando la congestión",
+          "Cierra la sesión con el antebrazo bien bombeado"]}
+ ]}
+};
+
 var MANOS={
   objetivo:"Aumentar tamaño de antebrazo, muñeca y dedos, marcarlos y mejorar fuerza de agarre",
   cuando:"En la mañana, antes del gym",
-  dias:[
-    {d:0,titulo:"Lunes",sub:"Gym: pecho",min:10,tipo:"trabajo",ej:[
-      {n:"Masaje con pelota de picos",det:"2 min por mano",nota:"SIEMPRE primero, calienta tendones"},
-      {n:"Gripper ajustable",det:"4 series × 10 reps",nota:"Excéntrico 3 seg al soltar",desc:"45 seg"},
-      {n:"Extensión de dedos · banda azul",det:"3 series × 20 reps",nota:"Pausa 1 seg abierto",desc:"30 seg"}
-    ]},
-    {d:1,titulo:"Martes",sub:"Gym: piernas",min:15,tipo:"trabajo",ej:[
-      {n:"Masaje con pelota de picos",det:"2 min por mano",nota:"Siempre primero"},
-      {n:"Gripper ajustable pesado",det:"5 series × 6 reps",nota:"Isométrico 5 seg cerrado",desc:"60 seg"},
-      {n:"Extensor independiente por dedo",det:"4 series × 12 reps por dedo",nota:"Un dedo a la vez · meñique y anular 1 serie extra",desc:"20 seg entre dedos · 40 seg entre series"},
-      {n:"Flexión de muñeca · entrenador U",det:"4 series × 12 reps",nota:"3 seg subida y 3 seg bajada",desc:"45 seg"},
-      {n:"Extensión inversa de muñeca · entrenador U",det:"4 series × 12 reps",nota:"3 seg subida y 3 seg bajada",desc:"45 seg"}
-    ]},
-    {d:2,titulo:"Miércoles",sub:"Gym: hombros, bíceps y tríceps",min:2,tipo:"descanso",ej:[
-      {n:"Masaje con pelota de picos",det:"2 min por mano",nota:"Solo si hay tensión"}
-    ],aviso:"Descanso de manos. Bíceps y tríceps comparten tendones con el antebrazo"},
-    {d:3,titulo:"Jueves",sub:"Gym: piernas",min:12,tipo:"trabajo",ej:[
-      {n:"Masaje con pelota de picos",det:"2 min por mano",nota:"Siempre primero"},
-      {n:"Anillo de resistencia · drop set",det:"3 drop sets",nota:"Fallo, 10 seg, fallo, 10 seg, fallo",desc:"40 seg entre drop sets"},
-      {n:"Pronación y supinación · entrenador U",det:"4 series × 20 reps",nota:"Ida y vuelta = 1 rep",desc:"40 seg"},
-      {n:"Huevo isométrico",det:"3 bloques",nota:"(15 seg contracción + 5 seg descanso) × 3",desc:"30 seg entre bloques"},
-      {n:"Extensión de dedos · banda naranja",det:"4 series × 25 reps rápidas",nota:"Pump final",desc:"30 seg"}
-    ]},
-    {d:4,titulo:"Viernes",sub:"Gym: espalda",min:0,tipo:"descanso",ej:[],
-     aviso:"Nada de kit. El agarre ya trabaja fuerte en jalones, remo y dominadas"}
-  ],
   progresion:[
     ["Semanas 1-2","5 a 10 kg"],["Semanas 3-4","15 a 20 kg"],
     ["Semanas 5-6","25 a 30 kg"],["Semanas 7-8","35 kg o más"]
@@ -166,10 +250,7 @@ var MANOS={
     "Nunca sacrificar el excéntrico lento por usar más peso",
     "Dolor en tendones o articulaciones = descansar. Quemazón muscular = normal",
     "3 sesiones por semana es suficiente, los antebrazos se recuperan en 48-72h"
-  ],
-  kit:["Pelota de masaje con picos","Huevo de agarre","Anillo de resistencia",
-       "Banda extensora azul (suave) y naranja (fuerte)","Extensor independiente de 4 dedos (13/17/21 LB)",
-       "Hand gripper ajustable (5 a 60 kg)","Entrenador de muñeca en U con resortes"]
+  ]
 };
 
 var GRUPOS=[
@@ -212,14 +293,14 @@ function esCardio(ej){return !!(ej&&ej.tipo==="cardio");}
 function sesCardio(s){return !!s.cardio;}
 
 /* ===================== ESTADO ===================== */
-var S={ejercicios:[],sesiones:[],etiquetas:{},unidad:"kg",fotos:{},jornadas:{},peso:[],ordenDias:{},manos:{},gripper:""};
+var S={ejercicios:[],sesiones:[],etiquetas:{},unidad:"kg",fotos:{},jornadas:{},peso:[],ordenDias:{},manos:{},gripper:"",fotosKit:{}};
 var U={vista:"hoy",diaSel:diaDeISO(hoyISO()),activo:null,fecha:hoyISO(),
        series:[{w:"",r:""}],cardio:{min:"",dist:"",nivel:"",fc:"",ritmo:"",ritmoU:"kmh"},
        nuevo:false,grupoNuevo:"otro",tipoNuevo:"fuerza",editEtiqueta:false,
        ejGrafica:null,grupoFiltro:null,busca:"",lupa:null,aviso:null,
        estado:"ok",detalle:"",calMes:null,entreno:null,pesoIn:"",
        editandoNombre:null,timer:null,timerSeg:90,diasAbiertos:{},ordenDiaSel:null,nombreNuevo:"",
-       moviendoFecha:false,nuevaFecha:"",manosDia:null,manosFecha:null,verGuia:false};
+       moviendoFecha:false,nuevaFecha:"",manosDia:null,manosFecha:null,verGuia:false,verPlan:false,guiaEj:null,fotoKitDest:null};
 
 /* ===================== PERSISTENCIA ===================== */
 function guardar(){
@@ -248,6 +329,7 @@ function cargar(){
       S.peso=d.peso||[];
       S.manos=d.manos||{};
       S.gripper=d.gripper||"";
+      S.fotosKit=d.fotosKit||{};
       S.ordenDias=d.ordenDias||{};
       /* migrar: si no hay ordenDias, construirlo desde el orden actual del array */
       var sinOrden=Object.keys(S.ordenDias).length===0;
@@ -489,8 +571,10 @@ function guardarPeso(){
 /* ===================== FOTOS ===================== */
 document.getElementById("inFoto").addEventListener("change",function(ev){
   var f=ev.target.files&&ev.target.files[0];ev.target.value="";
-  if(!f||!U.activo) return;
-  var destino=U.activo,fr=new FileReader();
+  var esKit=!!U.fotoKitDest;
+  if(!f||(!U.activo&&!esKit)){U.fotoKitDest=null;return;}
+  var destino=esKit?U.fotoKitDest:U.activo;U.fotoKitDest=null;
+  var fr=new FileReader();
   fr.onload=function(){
     var img=new Image();
     img.onload=function(){
@@ -498,7 +582,9 @@ document.getElementById("inFoto").addEventListener("change",function(ev){
       var c=document.createElement("canvas");
       c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);
       c.getContext("2d").drawImage(img,0,0,c.width,c.height);
-      S.fotos[destino]=c.toDataURL("image/jpeg",0.6);guardar();
+      var url=c.toDataURL("image/jpeg",0.6);
+      if(esKit) S.fotosKit[destino]=url; else S.fotos[destino]=url;
+      guardar();
       aviso(U.estado==="error"?"No hubo espacio para la foto":"Foto agregada",U.estado==="error");
     };
     img.onerror=function(){aviso("No se pudo leer esa imagen",true);};
@@ -544,13 +630,13 @@ function exportarCSV(){
   }
   var fm=Object.keys(S.manos).sort();
   if(fm.length){
-    f.push([]);f.push(["RUTINA DE MANOS"]);f.push(["Fecha","Dia","Ejercicio","Detalle"]);
+    f.push([]);f.push(["RUTINA DE MANOS"]);f.push(["Fecha","Dia","Sesion","Ejercicio","Detalle"]);
     fm.forEach(function(fx){
-      var pl=MANOS.dias.filter(function(x){return x.d===diaDeISO(fx);})[0];
-      if(!pl) return;
+      var inf=sesionDeDia(diaDeISO(fx));
+      if(!inf.esTrabajo) return;
       S.manos[fx].slice().sort(function(a,b){return a-b;}).forEach(function(i){
-        var e=pl.ej[i]; if(!e) return;
-        f.push([fx,pl.titulo,e.n,e.det]);
+        var e=inf.sesion.ej[i]; if(!e) return;
+        f.push([fx,DIAS[diaDeISO(fx)].l,inf.sesion.nombre,e.n,e.det]);
       });
     });
   }
@@ -575,7 +661,7 @@ document.getElementById("inJson").addEventListener("change",function(ev){
       S.sesiones=d.sesiones;S.etiquetas=d.etiquetas||{};
       S.unidad=d.unidad||"kg";S.fotos=d.fotos||{};
       S.jornadas=d.jornadas||{};S.peso=d.peso||[];
-      S.manos=d.manos||{};S.gripper=d.gripper||"";
+      S.manos=d.manos||{};S.gripper=d.gripper||"";S.fotosKit=d.fotosKit||{};
       U.activo=null;cargarBorrador();guardar();aviso("Copia restaurada");
     }catch(e){aviso("Ese archivo no es una copia válida",true);}
   };
@@ -1124,14 +1210,79 @@ function render(){
 }
 
 /* ===== PESTAÑA MANOS ===== */
+/* Clasifica cada día según TU rutina real del gym guardada en la app */
+function clasificarDia(d){
+  var ejs=S.ejercicios.filter(function(e){return e.dias&&e.dias.indexOf(d)>=0;});
+  var gr={}; ejs.forEach(function(e){gr[e.grupo||"otro"]=true;});
+  var et=(S.etiquetas[d]||"").toLowerCase();
+  var txtEj=ejs.map(function(e){return e.nombre.toLowerCase();}).join(" ");
+  var txt=et+" "+txtEj;
+  /* el agarre ya trabaja fuerte, o los tendones son compartidos */
+  if(gr.espalda||gr.biceps||
+     /espalda|dorsal|pull|b[ií]ceps|tr[ií]ceps|jal[oó]n|rem[oa]|dominad|peso muerto/.test(txt))
+    return {t:"bloqueado",razon:(gr.espalda||/espalda|dorsal|jal[oó]n|rem[oa]|dominad/.test(txt))
+      ? "Día de espalda: el agarre ya trabaja fuerte en jalones, remo y dominadas"
+      : "Día de bíceps y tríceps: comparten tendones con el antebrazo"};
+  if(!ejs.length) return {t:"libre",razon:"Sin gym ese día, las manos están descansadas"};
+  var soloBajo=Object.keys(gr).every(function(g){
+    return g==="pierna"||g==="core"||g==="cardio"||g==="otro";});
+  if(soloBajo) return {t:"libre",razon:"Día de tren inferior: las manos vienen frescas"};
+  return {t:"medio",razon:"Día de empuje: se puede trabajar manos sin interferir"};
+}
+
+/* Elige hasta 3 días de trabajo, lo más separados posible, con preferencia
+   a días libres y al fin de semana */
+function planSemana(){
+  var cls={},cand=[];
+  for(var d=0;d<7;d++){
+    cls[d]=clasificarDia(d);
+    if(cls[d].t!=="bloqueado") cand.push(d);
+  }
+  var mejor=null;
+  function puntaje(combo){
+    var p=0;
+    combo.forEach(function(d){
+      p+=cls[d].t==="libre"?10:4;
+      if(d===5||d===6) p+=3;            /* preferencia fin de semana */
+    });
+    for(var i=1;i<combo.length;i++){
+      var sep=combo[i]-combo[i-1];
+      p+=Math.min(sep,3)*4;             /* premia separación 48-72h */
+      if(sep===1) p-=8;                 /* castiga días seguidos */
+    }
+    if(combo.length>1){
+      var vuelta=7-(combo[combo.length-1]-combo[0]);
+      if(vuelta===1) p-=6;              /* castiga domingo+lunes */
+    }
+    return p;
+  }
+  var n=cand.length,obj=Math.min(3,n);
+  if(obj===0) return {dias:{},cls:cls};
+  (function combinar(ini,acc){
+    if(acc.length===obj){
+      var p=puntaje(acc);
+      if(!mejor||p>mejor.p) mejor={p:p,c:acc.slice()};
+      return;
+    }
+    for(var k=ini;k<n;k++){acc.push(cand[k]);combinar(k+1,acc);acc.pop();}
+  })(0,[]);
+  var orden=["A","B","C"],mapa={};
+  (mejor?mejor.c:[]).forEach(function(d,i){mapa[d]=orden[i%3];});
+  return {dias:mapa,cls:cls};
+}
+
+function sesionDeDia(d){
+  var pl=planSemana();
+  var s=pl.dias[d];
+  return {sesion:s?SESIONES[s]:null,cls:pl.cls[d],esTrabajo:!!s};
+}
+
 function manosFecha(){ return U.manosFecha||hoyISO(); }
 function manosDiaSel(){
   if(U.manosDia!==null&&U.manosDia!==undefined) return U.manosDia;
   return diaDeISO(manosFecha());
 }
-function manosPlan(d){
-  return MANOS.dias.filter(function(x){return x.d===d;})[0]||null;
-}
+function manosPlan(d){ return sesionDeDia(d); }
 function manosHechos(f){ return S.manos[f]||[]; }
 function manosHecho(f,i){ return manosHechos(f).indexOf(i)>=0; }
 function toggleManos(f,i){
@@ -1148,28 +1299,41 @@ function manosRachaSemana(){
   for(var k=0;k<7;k++){
     var dd=new Date(hoy); dd.setDate(dd.getDate()-k);
     var iso=dd.getFullYear()+"-"+String(dd.getMonth()+1).padStart(2,"0")+"-"+String(dd.getDate()).padStart(2,"0");
-    var plan=manosPlan((dd.getDay()+6)%7);
-    if(!plan||plan.tipo!=="trabajo") continue;
-    var tot=plan.ej.length;
+    var plan=sesionDeDia((dd.getDay()+6)%7);
+    if(!plan.esTrabajo) continue;
+    var tot=plan.sesion.ej.length;
     if(tot&&manosHechos(iso).length>=tot) hechos++;
   }
   return hechos;
 }
 
-function hManos(){
-  var f=manosFecha(), d=manosDiaSel(), plan=manosPlan(d), h="";
+function hIconoKit(k,size){
+  var t=KIT[k]; if(!t) return "";
+  size=size||44;
+  if(S.fotosKit&&S.fotosKit[k])
+    return '<img data-lupa-kit="'+k+'" src="'+S.fotosKit[k]+'" style="width:'+size+'px;height:'+size+'px;'
+      + 'border-radius:8px;object-fit:cover;flex:0 0 '+size+'px">';
+  return '<span style="flex:0 0 '+size+'px;width:'+size+'px;height:'+size+'px;border-radius:8px;'
+   + 'background:var(--iron);display:flex;align-items:center;justify-content:center">'
+   + '<svg viewBox="0 0 64 64" style="width:'+(size-6)+'px;height:'+(size-6)+'px">'+t.svg+'</svg></span>';
+}
 
-  /* encabezado con objetivo */
+function hManos(){
+  var f=manosFecha(), d=manosDiaSel(), info=sesionDeDia(d), h="";
+  var plan=info.sesion;
+
+  /* encabezado */
   h+='<div style="background:var(--surface);border-left:3px solid #C77DD9;border-radius:0 8px 8px 0;'
-   + 'padding:12px 14px;margin-bottom:16px">'
+   + 'padding:12px 14px;margin-bottom:14px">'
    + '<div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#C77DD9;margin-bottom:5px">Rutina de manos</div>'
    + '<div style="font-size:13px;color:var(--mute);line-height:1.5">'+esc(MANOS.objetivo)+'</div>'
    + '<div style="font-size:12px;color:var(--mute);margin-top:6px">⏱ '+esc(MANOS.cuando)+'</div></div>';
 
-  /* selector de día */
-  h+='<div class="dias">'+MANOS.dias.map(function(x){
-      var on=d===x.d, trabajo=x.tipo==="trabajo";
-      return '<button data-mdia="'+x.d+'" class="'+(on?"on":(trabajo?"tiene":""))+'">'+DIAS[x.d].c+'</button>';
+  /* selector de día: marca cuáles son de trabajo */
+  var pl=planSemana();
+  h+='<div class="dias">'+DIAS.map(function(x){
+      var on=d===x.i, trabaja=!!pl.dias[x.i];
+      return '<button data-mdia="'+x.i+'" class="'+(on?"on":(trabaja?"tiene":""))+'">'+x.c+'</button>';
     }).join("")+'</div>';
 
   /* fecha */
@@ -1177,42 +1341,43 @@ function hManos(){
    + '<span style="font-size:12px;color:var(--mute);flex:0 0 auto">Fecha</span>'
    + '<input type="date" id="manosFechaIn" value="'+f+'" style="flex:1"></div>';
 
-  if(!plan) return h+'<div class="vacio">Ese día no tiene rutina de manos</div>';
-
   /* título del día */
-  h+='<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;gap:8px;flex-wrap:wrap">'
-   + '<div><span style="font-size:21px;font-weight:700;letter-spacing:-.02em">'+plan.titulo+'</span>'
-   + '<span style="color:var(--mute);font-size:14px;margin-left:8px">'+esc(plan.sub)+'</span></div>'
-   + (plan.min?'<span style="font-size:13px;color:var(--mute)">~'+plan.min+' min</span>':"")
+  var etq=S.etiquetas[d]?esc(S.etiquetas[d]):"";
+  h+='<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;gap:8px;flex-wrap:wrap">'
+   + '<div><span style="font-size:21px;font-weight:700;letter-spacing:-.02em">'+DIAS[d].l+'</span>'
+   + (etq?'<span style="color:var(--mute);font-size:14px;margin-left:8px">Gym: '+etq+'</span>':"")+'</div>'
+   + (plan?'<span style="font-size:13px;color:'+plan.color+';font-weight:600">'+plan.nombre+' · ~'+plan.min+' min</span>':"")
    + '</div>';
 
-  if(plan.aviso){
+  if(!info.esTrabajo){
     h+='<div style="background:var(--surface);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;'
-     + 'padding:10px 12px;margin:10px 0 14px;font-size:13px;color:var(--mute);line-height:1.5">'
-     + esc(plan.aviso)+'</div>';
-  }
-
-  if(!plan.ej.length){
-    h+='<div class="vacio" style="margin-top:10px">Día libre de kit. Descansa las manos</div>';
+     + 'padding:12px 14px;margin:10px 0 14px">'
+     + '<div style="font-size:14px;font-weight:700;margin-bottom:4px">Descanso de manos</div>'
+     + '<div style="font-size:13px;color:var(--mute);line-height:1.5">'+esc(info.cls.razon)+'</div></div>';
+    h+='<div style="display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:8px;padding:12px 14px">'
+     + hIconoKit("pelota",40)
+     + '<div style="font-size:13px;color:var(--mute);line-height:1.45">Si sientes tensión, '
+     + '<b style="color:var(--chalk)">2 min de masaje con la pelota</b> por mano. Nada más</div></div>';
   } else {
     var hechos=manosHechos(f).length, tot=plan.ej.length;
-    h+='<div style="margin:14px 0 10px">'
+    h+='<div style="margin:12px 0 10px">'
      + '<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--mute);margin-bottom:5px">'
      + '<span>'+hechos+' de '+tot+' completados</span>'
      + (hechos===tot?'<span style="color:var(--green);font-weight:600">✓ Rutina terminada</span>':"")
      + '</div><div class="barra"><i style="width:'+(tot?hechos/tot*100:0).toFixed(0)+'%;background:'
-     + (hechos===tot?"#8FD3A8":"#C77DD9")+'"></i></div></div>';
+     + (hechos===tot?"#8FD3A8":plan.color)+'"></i></div></div>';
 
     plan.ej.forEach(function(e,i){
-      var ok=manosHecho(f,i);
-      h+='<button data-mtog="'+i+'" style="display:block;width:100%;text-align:left;border:none;font-family:inherit;'
-       + 'background:'+(ok?"var(--greenBg)":"var(--surface)")+';border-radius:8px;padding:12px 14px;margin-bottom:8px;'
-       + 'color:var(--chalk)">'
+      var ok=manosHecho(f,i), abierta=U.guiaEj===(d+"-"+i);
+      h+='<div style="background:'+(ok?"var(--greenBg)":"var(--surface)")+';border-radius:8px;margin-bottom:8px;overflow:hidden">';
+      h+='<button data-mtog="'+i+'" style="display:block;width:100%;text-align:left;border:none;'
+       + 'font-family:inherit;background:transparent;padding:12px 14px 10px;color:var(--chalk)">'
        + '<div style="display:flex;align-items:flex-start;gap:11px">'
        + '<span style="flex:0 0 22px;width:22px;height:22px;border-radius:50%;margin-top:1px;'
        + 'border:2px solid '+(ok?"#6BBF8A":"var(--line)")+';background:'+(ok?"#6BBF8A":"transparent")+';'
        + 'display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#14171B">'
        + (ok?"✓":"")+'</span>'
+       + hIconoKit(e.k,40)
        + '<div style="flex:1;min-width:0">'
        + '<div style="font-size:15px;font-weight:700;margin-bottom:3px;'+(ok?"opacity:.65":"")+'">'
        + (i+1)+'. '+esc(e.n)+'</div>'
@@ -1220,35 +1385,78 @@ function hManos(){
        + (e.nota?'<div style="font-size:12px;color:var(--mute);margin-top:4px;line-height:1.45">'+esc(e.nota)+'</div>':"")
        + (e.desc?'<div style="font-size:12px;color:var(--amber);margin-top:4px">Descanso '+esc(e.desc)+'</div>':"")
        + '</div></div></button>';
+      /* botón de guía */
+      h+='<div style="display:flex;gap:4px;padding:0 10px 10px 10px">'
+       + '<button data-guia="'+d+'-'+i+'" style="flex:1;background:var(--iron);border:1px solid var(--line);'
+       + 'border-radius:6px;padding:7px 10px;font-size:12px;font-weight:600;font-family:inherit;color:'
+       + (abierta?"var(--chalk)":"var(--mute)")+'">'+(abierta?"▾ Ocultar cómo se hace":"▸ Cómo se hace")+'</button>'
+       + '<button data-fotokit="'+e.k+'" style="background:var(--iron);border:1px solid var(--line);'
+       + 'border-radius:6px;padding:7px 11px;font-size:12px;font-weight:600;font-family:inherit;color:var(--mute)">'
+       + (S.fotosKit&&S.fotosKit[e.k]?"Cambiar foto":"📷 Mi aparato")+'</button></div>';
+      if(abierta){
+        h+='<div style="background:var(--iron);padding:12px 14px;border-top:1px solid var(--line)">'
+         + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">'
+         + hIconoKit(e.k,52)
+         + '<div style="font-size:13px;font-weight:700">'+esc((KIT[e.k]||{}).n||"")+'</div></div>';
+        (e.guia||[]).forEach(function(p,n){
+          h+='<div style="display:flex;gap:10px;margin-bottom:8px">'
+           + '<span style="flex:0 0 20px;width:20px;height:20px;border-radius:50%;background:var(--surfaceHi);'
+           + 'color:'+plan.color+';font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center">'+(n+1)+'</span>'
+           + '<span style="font-size:13px;color:var(--mute);line-height:1.5;flex:1">'+esc(p)+'</span></div>';
+        });
+        h+='</div>';
+      }
+      h+='</div>';
     });
 
-    if(hechos>0){
+    if(hechos>0)
       h+='<button class="link gris" data-act="limpiarManos" style="width:100%;margin-top:4px">Desmarcar todo</button>';
-    }
   }
 
-  /* carga actual del gripper */
+  /* carga del gripper */
   h+='<div style="margin-top:22px;background:var(--surface);border-radius:8px;padding:12px 14px">'
-   + '<div style="font-size:13px;color:var(--mute);margin-bottom:8px">Carga actual del gripper</div>'
+   + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">'
+   + hIconoKit("gripper",36)
+   + '<span style="font-size:13px;color:var(--mute)">Carga actual del gripper</span></div>'
    + '<div style="display:flex;gap:8px;align-items:center">'
    + '<input type="text" inputmode="decimal" id="gripperIn" value="'+esc(S.gripper)+'" placeholder="kg" style="flex:1">'
    + '<button class="btn" style="width:auto" data-act="guardarGripper">Guardar</button></div>'
-   + '<div style="font-size:12px;color:var(--mute);margin-top:8px;line-height:1.5">'+esc(MANOS.reglaCarga)+'</div>'
-   + '</div>';
+   + '<div style="font-size:12px;color:var(--mute);margin-top:8px;line-height:1.5">'+esc(MANOS.reglaCarga)+'</div></div>';
 
-  /* progreso de la semana */
-  var rs=manosRachaSemana();
+  /* resumen semanal */
+  var rs=manosRachaSemana(), totalSem=Object.keys(pl.dias).length;
   h+='<div class="stats" style="margin-top:16px">'
-   + '<div class="stat"><b style="color:'+(rs>=3?"#8FD3A8":"var(--chalk)")+'">'+rs+' / 3</b><span>sesiones completas · 7 días</span></div>'
+   + '<div class="stat"><b style="color:'+(rs>=totalSem&&totalSem?"#8FD3A8":"var(--chalk)")+'">'+rs+' / '+(totalSem||0)+'</b><span>sesiones completas · 7 días</span></div>'
    + '<div class="stat"><b>'+(S.gripper||"—")+'</b><span>kg en gripper</span></div></div>';
 
-  /* guía desplegable */
+  /* cómo quedó repartida la semana */
+  h+='<button data-act="verPlan" style="width:100%;background:var(--surface);border:none;border-radius:8px;'
+   + 'padding:12px 14px;margin-top:8px;display:flex;justify-content:space-between;align-items:center;'
+   + 'font-family:inherit;color:var(--chalk);font-size:14px;font-weight:600">'
+   + '<span>Cómo quedó tu semana</span>'
+   + '<span style="color:var(--mute);font-size:18px">'+(U.verPlan?"▾":"▸")+'</span></button>';
+  if(U.verPlan){
+    h+='<div style="background:var(--surface);border-top:1px solid var(--line);border-radius:0 0 8px 8px;padding:12px 14px">'
+     + '<div style="font-size:12px;color:var(--mute);margin-bottom:10px;line-height:1.5">'
+     + 'Se arma sola leyendo los días de tu rutina del gym. Si cambias los días de tus ejercicios, esto se reacomoda</div>';
+    DIAS.forEach(function(x){
+      var s=pl.dias[x.i], cl=pl.cls[x.i];
+      h+='<div style="padding:8px 0;border-bottom:1px solid var(--line)">'
+       + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:2px">'
+       + '<span style="font-size:13px;font-weight:600">'+x.l+'</span>'
+       + (s?'<span style="font-size:12px;color:'+SESIONES[s].color+';font-weight:600">'+SESIONES[s].nombre+'</span>'
+           :'<span style="font-size:12px;color:var(--mute)">Descanso</span>')+'</div>'
+       + '<div style="font-size:11px;color:var(--mute);line-height:1.45">'+esc(cl.razon)+'</div></div>';
+    });
+    h+='</div>';
+  }
+
+  /* guía general */
   h+='<button data-act="verGuia" style="width:100%;background:var(--surface);border:none;border-radius:8px;'
    + 'padding:12px 14px;margin-top:8px;display:flex;justify-content:space-between;align-items:center;'
    + 'font-family:inherit;color:var(--chalk);font-size:14px;font-weight:600">'
-   + '<span>Guía: progresión, reglas y kit</span>'
+   + '<span>Progresión, reglas y kit</span>'
    + '<span style="color:var(--mute);font-size:18px">'+(U.verGuia?"▾":"▸")+'</span></button>';
-
   if(U.verGuia){
     h+='<div style="background:var(--surface);border-top:1px solid var(--line);border-radius:0 0 8px 8px;padding:14px">';
     h+='<div style="font-size:13px;font-weight:700;margin-bottom:8px">Progresión del gripper</div>';
@@ -1261,11 +1469,17 @@ function hManos(){
       h+='<div style="display:flex;gap:8px;margin-bottom:7px;font-size:13px;color:var(--mute);line-height:1.5">'
        + '<span style="color:var(--amber)">·</span><span>'+esc(r)+'</span></div>';
     });
-    h+='<div style="font-size:13px;font-weight:700;margin:16px 0 8px">Kit de mano</div>';
-    MANOS.kit.forEach(function(k){
-      h+='<div style="display:flex;gap:8px;margin-bottom:6px;font-size:13px;color:var(--mute)">'
-       + '<span style="color:#C77DD9">·</span><span>'+esc(k)+'</span></div>';
+    h+='<div style="font-size:13px;font-weight:700;margin:16px 0 10px">Mi kit</div>';
+    Object.keys(KIT).forEach(function(k){
+      h+='<div style="display:flex;align-items:center;gap:11px;padding:7px 0">'
+       + hIconoKit(k,40)
+       + '<span style="flex:1;font-size:13px">'+esc(KIT[k].n)+'</span>'
+       + '<button data-fotokit="'+k+'" style="background:var(--iron);border:1px solid var(--line);border-radius:6px;'
+       + 'padding:6px 10px;font-size:11px;font-weight:600;font-family:inherit;color:var(--mute)">'
+       + (S.fotosKit&&S.fotosKit[k]?"Cambiar":"📷 Foto")+'</button></div>';
     });
+    h+='<div style="font-size:11px;color:var(--mute);margin-top:10px;line-height:1.5">'
+     + 'Los dibujos son de referencia. Tómale foto a tu propio aparato para reconocerlo de una</div>';
     h+='</div>';
   }
   return h;
@@ -1437,7 +1651,7 @@ document.addEventListener("click",function(ev){
     +"[data-ir],[data-graf],[data-corregir],[data-borrarej],[data-lupa],[data-gf],[data-gn],"
     +"[data-tn],[data-cal],[data-ent],[data-diatog],[data-toggle],"
     +"[data-editnom],[data-renom],[data-tseg],[data-orddiasel],[data-subedia],[data-bajadia],"
-    +"[data-mdia],[data-mtog]");
+    +"[data-mdia],[data-mtog],[data-guia],[data-fotokit],[data-lupa-kit]");
   if(!t) return;
   var d=t.dataset;
 
@@ -1515,6 +1729,9 @@ document.addEventListener("click",function(ev){
     return render();
   }
   if(d.mtog!==undefined){return toggleManos(manosFecha(),+d.mtog);}
+  if(d.guia!==undefined){U.guiaEj=(U.guiaEj===d.guia?null:d.guia);return render();}
+  if(d.fotokit!==undefined){U.fotoKitDest=d.fotokit;return document.getElementById("inFoto").click();}
+  if(d.lupaKit!==undefined){U.lupa=S.fotosKit[d.lupaKit];return render();}
   if(d.orddiasel!==undefined){U.ordenDiaSel=+d.orddiasel;return render();}
   if(d.subedia!==undefined){
     var sp=d.subedia.split(":");
@@ -1559,6 +1776,7 @@ document.addEventListener("click",function(ev){
     case "csv": return exportarCSV();
     case "json": return exportarJSON();
     case "verGuia": U.verGuia=!U.verGuia; return render();
+    case "verPlan": U.verPlan=!U.verPlan; return render();
     case "limpiarManos": delete S.manos[manosFecha()]; guardar(); return render();
     case "guardarGripper":
       var gi=document.getElementById("gripperIn");
