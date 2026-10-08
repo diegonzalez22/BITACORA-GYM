@@ -320,14 +320,15 @@ function esCardio(ej){return !!(ej&&ej.tipo==="cardio");}
 function sesCardio(s){return !!s.cardio;}
 
 /* ===================== ESTADO ===================== */
-var S={ejercicios:[],sesiones:[],etiquetas:{},unidad:"kg",fotos:{},jornadas:{},peso:[],ordenDias:{},manos:{},gripper:"",fotosKit:{}};
+var S={ejercicios:[],sesiones:[],etiquetas:{},unidad:"kg",fotos:{},jornadas:{},peso:[],ordenDias:{},manos:{},gripper:"",fotosKit:{},altura:""};
 var U={vista:"hoy",diaSel:diaDeISO(hoyISO()),activo:null,fecha:hoyISO(),
        series:[{w:"",r:""}],cardio:{min:"",dist:"",nivel:"",fc:"",ritmo:"",ritmoU:"kmh"},
        nuevo:false,grupoNuevo:"otro",tipoNuevo:"fuerza",editEtiqueta:false,
        ejGrafica:null,grupoFiltro:null,busca:"",lupa:null,aviso:null,
        estado:"ok",detalle:"",calMes:null,entreno:null,pesoIn:"",
        editandoNombre:null,timer:null,timerSeg:90,diasAbiertos:{},ordenDiaSel:null,nombreNuevo:"",
-       moviendoFecha:false,nuevaFecha:"",manosDia:null,manosFecha:null,verGuia:false,verPlan:false,guiaEj:null,fotoKitDest:null};
+       moviendoFecha:false,nuevaFecha:"",manosDia:null,manosFecha:null,verGuia:false,verPlan:false,guiaEj:null,fotoKitDest:null,
+       alturaIn:"",editAltura:false,verIMC:false};
 
 /* ===================== PERSISTENCIA ===================== */
 function guardar(){
@@ -357,6 +358,7 @@ function cargar(){
       S.manos=d.manos||{};
       S.gripper=d.gripper||"";
       S.fotosKit=d.fotosKit||{};
+      S.altura=d.altura||"";
       S.ordenDias=d.ordenDias||{};
       /* migrar: si no hay ordenDias, construirlo desde el orden actual del array */
       var sinOrden=Object.keys(S.ordenDias).length===0;
@@ -652,8 +654,18 @@ function exportarCSV(){
     });
   });
   if(S.peso.length){
-    f.push([]);f.push(["PESO CORPORAL"]);f.push(["Fecha","kg"]);
-    S.peso.forEach(function(p){f.push([p.fecha,p.kg]);});
+    f.push([]);f.push(["PESO CORPORAL"]);
+    if(S.altura){
+      f.push(["Estatura_cm",S.altura]);
+      f.push(["Fecha","kg","IMC","Categoria"]);
+      S.peso.forEach(function(p){
+        var v=calcIMC(p.kg,S.altura);
+        f.push([p.fecha,p.kg,v?v.toFixed(2):"",v?catIMC(v).n:""]);
+      });
+    } else {
+      f.push(["Fecha","kg"]);
+      S.peso.forEach(function(p){f.push([p.fecha,p.kg]);});
+    }
   }
   var fm=Object.keys(S.manos).sort();
   if(fm.length){
@@ -689,6 +701,7 @@ document.getElementById("inJson").addEventListener("change",function(ev){
       S.unidad=d.unidad||"kg";S.fotos=d.fotos||{};
       S.jornadas=d.jornadas||{};S.peso=d.peso||[];
       S.manos=d.manos||{};S.gripper=d.gripper||"";S.fotosKit=d.fotosKit||{};
+      S.altura=d.altura||"";
       U.activo=null;cargarBorrador();guardar();aviso("Copia restaurada");
     }catch(e){aviso("Ese archivo no es una copia válida",true);}
   };
@@ -1217,7 +1230,7 @@ function render(){
 
   /* ---------------- RESUMEN ---------------- */
   if(U.vista==="resumen"){
-    h+=hCalendario()+hSeriesSemana()+hPesoCorporal();
+    h+=hCalendario()+hSeriesSemana()+hPesoCorporal()+hIMC();
   }
 
   /* ---------------- PIE ---------------- */
@@ -1708,6 +1721,105 @@ function hSeriesSemana(){
 }
 
 /* ---------- peso corporal ---------- */
+/* ===== ÍNDICE DE MASA CORPORAL ===== */
+var IMC_CAT=[
+ {max:18.5, n:"Bajo peso",  c:"#5B8DD9"},
+ {max:25,   n:"Normal",     c:"#8FD3A8"},
+ {max:30,   n:"Sobrepeso",  c:"#D8A430"},
+ {max:999,  n:"Obesidad",   c:"#D95B5B"}
+];
+function calcIMC(kg,cm){
+  var m=(+cm||0)/100;
+  if(!kg||!m) return null;
+  return kg/(m*m);
+}
+function catIMC(v){
+  for(var i=0;i<IMC_CAT.length;i++) if(v<IMC_CAT[i].max) return IMC_CAT[i];
+  return IMC_CAT[IMC_CAT.length-1];
+}
+function rangoNormal(cm){
+  var m=(+cm||0)/100; if(!m) return null;
+  return {min:18.5*m*m, max:24.9*m*m};
+}
+function guardarAltura(){
+  var v=parseFloat(numTxt(U.alturaIn));
+  if(!v||v<100||v>250){aviso("Escribe tu estatura en cm, por ejemplo 175",true);return;}
+  S.altura=String(v); U.editAltura=false; U.alturaIn="";
+  guardar(); aviso("Estatura guardada");
+}
+/* escala visual de 15 a 40 con el marcador donde cae */
+function hEscalaIMC(v){
+  var MIN=15,MAX=40;
+  var pos=Math.max(0,Math.min(100,(v-MIN)/(MAX-MIN)*100));
+  var tramos=[[18.5,"#5B8DD9"],[25,"#8FD3A8"],[30,"#D8A430"],[40,"#D95B5B"]];
+  var ini=MIN,barras="";
+  tramos.forEach(function(t){
+    var w=(t[0]-ini)/(MAX-MIN)*100; ini=t[0];
+    barras+='<span style="width:'+w.toFixed(2)+'%;background:'+t[1]+';display:block;height:100%"></span>';
+  });
+  return '<div style="margin:14px 0 6px">'
+   + '<div style="position:relative;height:30px">'
+   + '<div style="position:absolute;left:'+pos.toFixed(2)+'%;top:0;transform:translateX(-50%);'
+   + 'font-size:11px;font-weight:700;color:var(--chalk);white-space:nowrap">▼</div></div>'
+   + '<div style="display:flex;height:10px;border-radius:5px;overflow:hidden">'+barras+'</div>'
+   + '<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--mute);margin-top:5px">'
+   + '<span>15</span><span>18.5</span><span>25</span><span>30</span><span>40</span></div></div>';
+}
+
+function hIMC(){
+  var h='<div style="font-size:15px;font-weight:700;margin:26px 0 12px">Índice de masa corporal</div>';
+
+  /* sin estatura: pedirla */
+  if(!S.altura||U.editAltura){
+    h+='<div class="fila" style="flex-wrap:nowrap">'
+     + '<input id="alturaIn" type="text" inputmode="decimal" placeholder="Estatura en cm · ej 175" value="'
+     + esc(U.alturaIn||(U.editAltura?S.altura:""))+'">'
+     + '<button class="btn" style="width:auto" data-act="guardarAltura">Guardar</button></div>';
+    if(!S.altura) return h+'<div class="vacio">El IMC necesita tu estatura. Se pide una sola vez</div>';
+    h+='<button class="link gris" data-act="cancelarAltura" style="width:100%">Cancelar</button>';
+    return h;
+  }
+
+  if(!S.peso.length)
+    return h+'<div class="vacio">Anota tu peso arriba para calcular el IMC</div>';
+
+  var ult=S.peso[S.peso.length-1];
+  var v=calcIMC(ult.kg,S.altura);
+  var cat=catIMC(v), rg=rangoNormal(S.altura);
+
+  h+='<div style="background:var(--surface);border-radius:8px;padding:14px">'
+   + '<div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:2px">'
+   + '<span style="font-size:34px;font-weight:800;letter-spacing:-.03em;color:'+cat.c+';font-variant-numeric:tabular-nums">'
+   + v.toFixed(1)+'</span>'
+   + '<span style="font-size:15px;font-weight:700;color:'+cat.c+'">'+cat.n+'</span></div>'
+   + '<div style="font-size:12px;color:var(--mute)">'+n1(ult.kg)+' kg · '+n1(S.altura)+' cm · '+fmtFecha(ult.fecha)+'</div>'
+   + hEscalaIMC(v)
+   + '<div style="font-size:12px;color:var(--mute);margin-top:10px;line-height:1.5">'
+   + 'Para tu estatura, el rango de peso que el IMC considera normal va de <b style="color:var(--chalk)">'
+   + n1(rg.min)+' a '+n1(rg.max)+' kg</b></div>'
+   + '<button class="link gris" data-act="editAltura" style="margin-top:4px">Cambiar estatura</button>'
+   + '</div>';
+
+  /* lo que el IMC no ve */
+  h+='<button data-act="verIMC" style="width:100%;background:var(--surface);border:none;border-radius:8px;'
+   + 'padding:12px 14px;margin-top:8px;display:flex;justify-content:space-between;align-items:center;'
+   + 'font-family:inherit;color:var(--chalk);font-size:14px;font-weight:600">'
+   + '<span>Qué no te dice este número</span>'
+   + '<span style="color:var(--mute);font-size:18px">'+(U.verIMC?"▾":"▸")+'</span></button>';
+  if(U.verIMC){
+    h+='<div style="background:var(--surface);border-top:1px solid var(--line);border-radius:0 0 8px 8px;'
+     + 'padding:14px;font-size:13px;color:var(--mute);line-height:1.55">'
+     + '<p style="margin:0 0 10px">El IMC solo divide tu peso entre tu estatura al cuadrado. '
+     + 'No sabe cuánto de ese peso es músculo y cuánto es grasa.</p>'
+     + '<p style="margin:0 0 10px">Si llevas tiempo entrenando fuerza, el músculo que ganas te sube el IMC '
+     + 'aunque estés mejor de composición. Por eso mucha gente que entrena aparece como '
+     + '<span style="color:#D8A430">sobrepeso</span> sin tener grasa de más.</p>'
+     + '<p style="margin:0">Tómalo como una referencia general, no como la medida de tu progreso. '
+     + 'Tus cargas en el gym y cómo te queda la ropa dicen más.</p></div>';
+  }
+  return h;
+}
+
 function hPesoCorporal(){
   var h='<div style="font-size:15px;font-weight:700;margin-bottom:12px">Peso corporal</div>'
    + '<div class="fila" style="flex-wrap:nowrap">'
@@ -1920,6 +2032,10 @@ document.addEventListener("click",function(ev){
     case "terminarJornada": return terminarJornada();
     case "reiniciarJornada": delete S.jornadas[U.fecha];guardar();return render();
     case "guardarPeso": return guardarPeso();
+    case "guardarAltura": return guardarAltura();
+    case "editAltura": U.editAltura=true; U.alturaIn=S.altura; return render();
+    case "cancelarAltura": U.editAltura=false; U.alturaIn=""; return render();
+    case "verIMC": U.verIMC=!U.verIMC; return render();
     case "entreno": U.entreno={i:0};cargarBorrador();return render();
     case "salirEntreno": U.entreno=null;return render();
     case "csv": return exportarCSV();
@@ -1946,6 +2062,7 @@ document.addEventListener("input",function(ev){
   if(t.id==="moverFechaIn"){U.nuevaFecha=t.value;return;}
   if(t.id==="fechaIn"){U.fecha=t.value;U.moviendoFecha=false;cargarBorrador();return render();}
   if(t.id==="pesoIn"){U.pesoIn=numTxt(t.value);return;}
+  if(t.id==="alturaIn"){U.alturaIn=numTxt(t.value);return;}
   if(t.id==="nuevoIn"){U.nombreNuevo=t.value;return;}
   if(t.id==="buscaIn"){
     U.busca=t.value;
@@ -2029,6 +2146,7 @@ document.addEventListener("keydown",function(ev){
   if(ev.target.id==="etiquetaIn"){
     S.etiquetas[U.diaSel]=ev.target.value.trim();U.editEtiqueta=false;guardar();render();}
   if(ev.target.id==="pesoIn") guardarPeso();
+  if(ev.target.id==="alturaIn"){U.alturaIn=numTxt(ev.target.value);guardarAltura();}
   if(ev.target.id==="gripperIn"){
     S.gripper=numTxt(ev.target.value).trim();guardar();
     aviso(S.gripper?"Gripper en "+S.gripper+" kg":"Carga borrada");}
