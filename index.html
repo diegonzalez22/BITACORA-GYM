@@ -155,13 +155,29 @@ var KIT={
  bandaAzul:{n:"Banda extensora azul (suave)",
    svg:'<ellipse cx="32" cy="32" rx="20" ry="13" fill="none" stroke="#5B8DD9" stroke-width="4"/>'+
        [[18,24],[26,20],[34,20],[42,24]].map(function(p){return '<rect x="'+(p[0]-2)+'" y="'+(p[1]-9)+'" width="4" height="11" rx="2" fill="#8B95A3"/>';}).join("")},
- bandaNaranja:{n:"Banda extensora naranja (fuerte)",
+ bandaNegra:{n:"Banda extensora negra (fuerte)",
+   svg:'<ellipse cx="32" cy="32" rx="20" ry="13" fill="none" stroke="#9AA4B2" stroke-width="6"/>'+
+       '<ellipse cx="32" cy="32" rx="20" ry="13" fill="none" stroke="#5A6472" stroke-width="2.5"/>'+
+       [[18,24],[26,20],[34,20],[42,24]].map(function(p){return '<rect x="'+(p[0]-2)+'" y="'+(p[1]-9)+'" width="4" height="11" rx="2" fill="#8B95A3"/>';}).join("")},
+ bandaNaranja:{n:"Banda extensora naranja (media)",
    svg:'<ellipse cx="32" cy="32" rx="20" ry="13" fill="none" stroke="#E8724F" stroke-width="5"/>'+
        [[18,24],[26,20],[34,20],[42,24]].map(function(p){return '<rect x="'+(p[0]-2)+'" y="'+(p[1]-9)+'" width="4" height="11" rx="2" fill="#8B95A3"/>';}).join("")},
- extensor:{n:"Extensor independiente de 4 dedos",
-   svg:'<rect x="12" y="34" width="40" height="16" rx="5" fill="#5BD98A" opacity=".3" stroke="#5BD98A" stroke-width="2"/>'+
-       [18,28,38,48].map(function(x,k){return '<circle cx="'+x+'" cy="24" r="6" fill="none" stroke="#5BD98A" stroke-width="2.5"/>'+
-       '<line x1="'+x+'" y1="30" x2="'+x+'" y2="34" stroke="#5BD98A" stroke-width="2.5"/>';}).join("")},
+ resortes:{n:"Ejercitador de resortes · 4 botones",
+   svg:'<rect x="10" y="26" width="44" height="15" rx="4" fill="#D9A45B" opacity=".3" stroke="#D9A45B" stroke-width="2"/>'+
+       [16,27,38,49].map(function(x){
+         return '<rect x="'+(x-4)+'" y="8" width="8" height="7" rx="2" fill="#D9A45B"/>'+
+                '<path d="M'+x+' 15 q-3 2 0 4 q3 2 0 4 q-3 2 0 3" stroke="#D9A45B" stroke-width="1.8" fill="none"/>';
+       }).join("")+
+       '<path d="M10 43 Q10 54 24 54 L50 54 Q56 54 56 47 L56 43" fill="#D9A45B" opacity=".45" stroke="#D9A45B" stroke-width="2"/>'},
+ extensor:{n:"Extensor de silicona · 5 anillos + correa",
+   svg:'<rect x="4" y="25" width="10" height="15" rx="4" fill="none" stroke="#9AA4B2" stroke-width="2.4"/>'+
+       '<rect x="14" y="28" width="18" height="9" rx="3" fill="#5BD98A" opacity=".3" stroke="#5BD98A" stroke-width="1.8"/>'+
+       '<line x1="20" y1="28" x2="20" y2="37" stroke="#5BD98A" stroke-width="1.2" opacity=".6"/>'+
+       '<line x1="26" y1="28" x2="26" y2="37" stroke="#5BD98A" stroke-width="1.2" opacity=".6"/>'+
+       [[44,13],[51,22],[53,32],[51,42],[44,51]].map(function(p){
+         return '<line x1="33" y1="32" x2="'+p[0]+'" y2="'+p[1]+'" stroke="#5BD98A" stroke-width="2.6"/>'+
+                '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="5.4" fill="none" stroke="#5BD98A" stroke-width="2.6"/>';
+       }).join("")},
  anillo:{n:"Anillo de resistencia",
    svg:'<circle cx="32" cy="32" r="18" fill="none" stroke="#D9A45B" stroke-width="7"/>'+
        '<circle cx="32" cy="32" r="18" fill="none" stroke="#8B95A3" stroke-width="1" opacity=".5"/>'},
@@ -192,11 +208,12 @@ var SESIONES={
    {k:"bandaAzul",n:"Extensión de dedos · banda azul",det:"3 series × 20 reps",nota:"Pausa 1 seg abierto",desc:"30 seg",
     t:[{n:"Descanso",s:30,d:1}],
     guia:["Mete los 4 dedos y el pulgar dentro de la banda, yemas juntas",
+          "Tienes tres: azul suave, naranja media y negra fuerte. Sube de color cuando las 20 reps salgan sobradas",
           "Abre la mano separando todos los dedos contra la resistencia",
           "Mantén 1 segundo en máxima apertura",
           "Cierra lento. Esto equilibra el trabajo del gripper y protege los tendones"]}
  ]},
- B:{id:"B",nombre:"Sesión completa",min:15,color:"#C77DD9",ej:[
+ B:{id:"B",nombre:"Sesión completa",min:18,color:"#C77DD9",ej:[
    {k:"pelota",n:"Masaje con pelota de picos",det:"2 min por mano",nota:"Siempre primero",
     t:[{n:"Mano derecha",s:120},{n:"Mano izquierda",s:120}],
     guia:["Rueda la pelota por la palma con presión firme",
@@ -208,13 +225,25 @@ var SESIONES={
           "Cierra completo y MANTÉN apretado contando 5 segundos",
           "Suelta controlado, no de golpe",
           "6 reps limpias. Si la última no cierra, es demasiado peso"]},
-   {k:"extensor",n:"Extensor independiente por dedo",det:"4 series × 12 reps por dedo",
+   {k:"resortes",n:"Flexión por dedo · ejercitador de resortes",det:"4 series × 12 reps por dedo",
     nota:"Un dedo a la vez · meñique y anular 1 serie extra",desc:"20 seg entre dedos · 40 seg entre series",
     t:[{n:"Entre dedos",s:20,d:1},{n:"Entre series",s:40,d:1}],
-    guia:["Coloca la base del aparato en la palma",
-          "Presiona UN solo botón con un dedo, los demás quedan quietos",
-          "Baja lento y repite 12 veces antes de pasar al siguiente dedo",
+    guia:["Es el aparato de los 4 botones con resortes, no el de silicona",
+          "El mango va en la palma, cada dedo sobre su botón",
+          "Presiona UN solo botón hacia abajo, los otros tres quedan quietos arriba",
+          "Sube lento dejando que el resorte te devuelva, sin soltar de golpe",
+          "12 reps y pasas al siguiente dedo",
           "Meñique y anular llevan una serie extra porque son los más débiles"]},
+   {k:"extensor",n:"Extensión por dedo · extensor de silicona",det:"3 series × 12 reps por dedo",
+    nota:"El opuesto del anterior · abrir en vez de cerrar · correa en la muñeca",desc:"20 seg entre dedos · 40 seg entre series",
+    t:[{n:"Entre dedos",s:20,d:1},{n:"Entre series",s:40,d:1}],
+    guia:["Ponte la correa de velcro en la muñeca, ajustada sin apretar la circulación",
+          "Pasa la cola del extensor por la hebilla metálica de la correa",
+          "La muesca donde quede enganchada define la carga: 13 LB es la del extremo y la más suave, 21 LB la de arriba y la más dura",
+          "Entre más cerca de los anillos enganches, menos silicona queda libre y más cuesta abrir",
+          "Un dedo en cada anillo, pulgar incluido",
+          "Abre la mano separando los dedos contra la silicona y cierra lento",
+          "Siempre después del de resortes: cierras y luego abres, así queda equilibrado"]},
    {k:"entrenadorU",n:"Flexión de muñeca · entrenador U",det:"4 series × 12 reps",
     nota:"3 seg subida y 3 seg bajada",desc:"45 seg",
     t:[{n:"Descanso",s:45,d:1}],
@@ -257,10 +286,107 @@ var SESIONES={
    {k:"bandaNaranja",n:"Extensión de dedos · banda naranja",det:"4 series × 25 reps rápidas",
     nota:"Pump final",desc:"30 seg",
     t:[{n:"Descanso",s:30,d:1}],
-    guia:["Banda naranja, la de resistencia fuerte",
+    guia:["Banda naranja, la media. Si ya te queda fácil pasa a la negra",
           "Abre y cierra rápido, sin pausa arriba",
           "25 reps seguidas buscando la congestión",
           "Cierra la sesión con el antebrazo bien bombeado"]}
+ ]},
+ /* --- ligera: se puede hacer incluso en días de espalda o brazo --- */
+ D:{id:"D",nombre:"Extensores y movilidad",min:8,color:"#5BD98A",ligera:true,ej:[
+   {k:"pelota",n:"Masaje con pelota de picos",det:"90 seg por mano",nota:"Suave, solo para soltar",
+    t:[{n:"Mano derecha",s:90},{n:"Mano izquierda",s:90}],
+    guia:["Presión media, sin buscar dolor",
+          "Palma primero y después antebrazo",
+          "Hoy el objetivo es soltar, no castigar"]},
+   {k:"bandaAzul",n:"Extensión de dedos · banda azul",det:"3 series × 15 reps",
+    nota:"Ritmo tranquilo, sin llegar al fallo",desc:"30 seg",
+    t:[{n:"Descanso",s:30,d:1}],
+    guia:["Banda azul, la suave. Hoy no se busca intensidad",
+          "Abre los dedos completo y cierra lento",
+          "Estos son los músculos que compensan todo lo que jalas en el gym",
+          "Si sientes fatiga real, para antes de las 15"]},
+   {k:"extensor",n:"Extensión por dedo · extensor de silicona",det:"2 series × 12 por dedo",
+    nota:"Marca suave, sin forzar",desc:"30 seg",
+    t:[{n:"Descanso",s:30,d:1}],
+    guia:["Correa de velcro en la muñeca y la cola enganchada en la hebilla",
+          "Hoy en la muesca de 13 LB, la del extremo, que es la más suave",
+          "Un dedo en cada anillo, abre separando sin forzar",
+          "Es el ejercicio que más compensa lo que cierras la mano el resto de la semana"]},
+   {k:"entrenadorU",n:"Movilidad de muñeca",det:"2 series × 10 círculos por lado",
+    nota:"Sin resistencia, solo el recorrido",desc:"20 seg",
+    t:[{n:"Descanso",s:20,d:1}],
+    guia:["Puño cerrado suave, sin agarrar nada o con el aparato muy liviano",
+          "Haz círculos completos con la muñeca, 10 en cada sentido",
+          "Después lleva la muñeca a flexión máxima y extensión máxima",
+          "Busca recorrido, no fuerza"]},
+   {k:"pelota",n:"Estiramiento de flexores y extensores",det:"3 × 30 seg por lado",
+    nota:"El cierre del día",desc:"15 seg",
+    t:[{n:"Estiramiento",s:30},{n:"Descanso",s:15,d:1}],
+    guia:["Brazo estirado al frente, palma hacia arriba",
+          "Con la otra mano lleva los dedos hacia abajo y atrás, 30 seg",
+          "Ahora palma hacia abajo y lleva los dedos hacia ti, otros 30 seg",
+          "Debe estirar, nunca punzar"]}
+ ]},
+ /* --- media: patrón de pinza, distinto al de puño --- */
+ E:{id:"E",nombre:"Pinza y dedos",min:10,color:"#A45BD9",ej:[
+   {k:"pelota",n:"Masaje con pelota de picos",det:"2 min por mano",nota:"Siempre primero",
+    t:[{n:"Mano derecha",s:120},{n:"Mano izquierda",s:120}],
+    guia:["Rueda por palma y antebrazo con presión firme",
+          "Insiste en la base del pulgar, hoy trabaja fuerte"]},
+   {k:"resortes",n:"Flexión por dedo · ejercitador de resortes",det:"3 series × 15 reps por dedo",
+    nota:"Un dedo a la vez, carga media",desc:"20 seg entre dedos · 40 seg entre series",
+    t:[{n:"Entre dedos",s:20,d:1},{n:"Entre series",s:40,d:1}],
+    guia:["El de los 4 botones con resortes",
+          "Mango en la palma, cada dedo sobre su botón",
+          "Presiona un solo botón a la vez, los demás quietos",
+          "15 por dedo sin llegar al fallo, hoy es volumen no intensidad"]},
+   {k:"anillo",n:"Pinza con el anillo",det:"4 series × 12 por mano",
+    nota:"Pellizco con pulgar contra dedos",desc:"40 seg",
+    t:[{n:"Descanso",s:40,d:1}],
+    guia:["Agarra el anillo solo con las yemas, como un pellizco",
+          "Pulgar de un lado y los otros cuatro dedos del otro",
+          "Aprieta 2 seg y suelta lento",
+          "Este agarre de pinza es distinto al del gripper y suele ser el más débil"]},
+   {k:"huevo",n:"Rodar el huevo entre los dedos",det:"3 series × 45 seg",
+    nota:"Coordinación y pulgar",desc:"30 seg",
+    t:[{n:"Trabajo",s:45},{n:"Descanso",s:30,d:1}],
+    guia:["Haz girar el huevo en la palma usando solo los dedos",
+          "Cambia de sentido a la mitad",
+          "Parece fácil pero fatiga el pulgar y los interóseos"]},
+   {k:"bandaAzul",n:"Extensión de dedos · banda azul",det:"3 series × 20 reps",
+    nota:"Cierre equilibrador",desc:"30 seg",
+    t:[{n:"Descanso",s:30,d:1}],
+    guia:["Siempre cerrar con extensores después de tanto cerrar la mano",
+          "20 reps controladas"]}
+ ]},
+ /* --- media: aguante en vez de fuerza máxima --- */
+ F:{id:"F",nombre:"Resistencia de agarre",min:12,color:"#5BD9D9",ej:[
+   {k:"pelota",n:"Masaje con pelota de picos",det:"2 min por mano",nota:"Siempre primero",
+    t:[{n:"Mano derecha",s:120},{n:"Mano izquierda",s:120}],
+    guia:["Rueda por palma y antebrazo","Prepara para un día de mucho volumen"]},
+   {k:"gripper",n:"Gripper ligero · alto volumen",det:"3 series × 30 reps",
+    nota:"Carga baja, ritmo constante",desc:"60 seg",
+    t:[{n:"Descanso",s:60,d:1}],
+    guia:["Baja la carga a la mitad de lo que usas en la sesión pesada",
+          "30 reps seguidas sin parar, ritmo de metrónomo",
+          "Hoy no se busca fuerza máxima sino aguante",
+          "La quemazón va a llegar sobre la rep 20, ahí es donde sirve"]},
+   {k:"huevo",n:"Sostenido largo con el huevo",det:"4 series × 40 seg",
+    nota:"Apretar constante sin soltar",desc:"40 seg",
+    t:[{n:"Sostenido",s:40},{n:"Descanso",s:40,d:1}],
+    guia:["Aprieta al 60 por ciento de tu fuerza y mantén",
+          "No es apretar al máximo, es aguantar los 40 seg completos",
+          "Si sueltas antes, baja la intensidad del apretón la próxima serie"]},
+   {k:"entrenadorU",n:"Flexión de muñeca · ritmo continuo",det:"3 series × 20 reps",
+    nota:"Sin pausa arriba ni abajo",desc:"45 seg",
+    t:[{n:"Descanso",s:45,d:1}],
+    guia:["Palma hacia arriba, antebrazo apoyado",
+          "20 reps a ritmo continuo, más rápido que en la sesión pesada",
+          "Recorrido completo aunque sea más liviano"]},
+   {k:"bandaNegra",n:"Extensión de dedos · banda negra",det:"3 series × 25 reps",
+    nota:"Cierre · usa naranja si la negra es mucho",desc:"30 seg",
+    t:[{n:"Descanso",s:30,d:1}],
+    guia:["Naranja o negra según cómo vengas. 25 reps rápidas","Equilibra todo el volumen de cierre del día"]}
  ]}
 };
 
@@ -276,7 +402,10 @@ var MANOS={
     "El masaje con pelota de picos SIEMPRE va primero, en la mañana los tendones están fríos",
     "Nunca sacrificar el excéntrico lento por usar más peso",
     "Dolor en tendones o articulaciones = descansar. Quemazón muscular = normal",
-    "3 sesiones por semana es suficiente, los antebrazos se recuperan en 48-72h"
+    "Las sesiones de trabajo nunca van dos días seguidos: el tendón del codo se recupera más lento que el músculo",
+    "Las sesiones ligeras de extensores sí pueden ir casi a diario, incluso en días de espalda o brazo",
+    "Señal de parar: dolor punzante en el codo por fuera o por dentro, o rigidez al despertar. Si aparece, descansa de 3 a 5 días",
+    "Más días no es mejor si llegas con las manos cansadas al gym. El agarre es lo primero que falla en jalones y peso muerto"
   ]
 };
 
@@ -320,7 +449,7 @@ function esCardio(ej){return !!(ej&&ej.tipo==="cardio");}
 function sesCardio(s){return !!s.cardio;}
 
 /* ===================== ESTADO ===================== */
-var S={ejercicios:[],sesiones:[],etiquetas:{},unidad:"kg",fotos:{},jornadas:{},peso:[],ordenDias:{},manos:{},gripper:"",fotosKit:{},altura:""};
+var S={ejercicios:[],sesiones:[],etiquetas:{},unidad:"kg",fotos:{},jornadas:{},peso:[],ordenDias:{},manos:{},gripper:"",fotosKit:{},altura:"",manosVol:3};
 var U={vista:"hoy",diaSel:diaDeISO(hoyISO()),activo:null,fecha:hoyISO(),
        series:[{w:"",r:""}],cardio:{min:"",dist:"",nivel:"",fc:"",ritmo:"",ritmoU:"kmh"},
        nuevo:false,grupoNuevo:"otro",tipoNuevo:"fuerza",editEtiqueta:false,
@@ -359,6 +488,7 @@ function cargar(){
       S.gripper=d.gripper||"";
       S.fotosKit=d.fotosKit||{};
       S.altura=d.altura||"";
+      S.manosVol=d.manosVol||3;
       S.ordenDias=d.ordenDias||{};
       /* migrar: si no hay ordenDias, construirlo desde el orden actual del array */
       var sinOrden=Object.keys(S.ordenDias).length===0;
@@ -702,6 +832,7 @@ document.getElementById("inJson").addEventListener("change",function(ev){
       S.jornadas=d.jornadas||{};S.peso=d.peso||[];
       S.manos=d.manos||{};S.gripper=d.gripper||"";S.fotosKit=d.fotosKit||{};
       S.altura=d.altura||"";
+      S.manosVol=d.manosVol||3;
       U.activo=null;cargarBorrador();guardar();aviso("Copia restaurada");
     }catch(e){aviso("Ese archivo no es una copia válida",true);}
   };
@@ -1263,7 +1394,8 @@ function clasificarDia(d){
      /espalda|dorsal|pull|b[ií]ceps|tr[ií]ceps|jal[oó]n|rem[oa]|dominad|peso muerto/.test(txt))
     return {t:"bloqueado",razon:(gr.espalda||/espalda|dorsal|jal[oó]n|rem[oa]|dominad/.test(txt))
       ? "Día de espalda: el agarre ya trabaja fuerte en jalones, remo y dominadas"
-      : "Día de bíceps y tríceps: comparten tendones con el antebrazo"};
+      : "Día de bíceps y tríceps: comparten tendones con el antebrazo",
+      ligeraOk:"Sí caben extensores y movilidad: compensan todo lo que cerraste la mano hoy"};
   if(!ejs.length) return {t:"libre",razon:"Sin gym ese día, las manos están descansadas"};
   var soloBajo=Object.keys(gr).every(function(g){
     return g==="pierna"||g==="core"||g==="cardio"||g==="otro";});
@@ -1271,45 +1403,92 @@ function clasificarDia(d){
   return {t:"medio",razon:"Día de empuje: se puede trabajar manos sin interferir"};
 }
 
-/* Elige hasta 3 días de trabajo, lo más separados posible, con preferencia
-   a días libres y al fin de semana */
+/* Reparte la semana: sesiones de trabajo separadas entre sí,
+   y días ligeros de extensores que sí caben en días de espalda o brazo */
+var CICLO_TRABAJO=["A","B","C","F","E"];
+
+function volManos(){ var v=+S.manosVol||3; return Math.max(3,Math.min(6,v)); }
+
 function planSemana(){
+  var vol=volManos();
+  var nTrab = vol>=6?4:3;
+  var nLig  = vol-nTrab;
+
   var cls={},cand=[];
   for(var d=0;d<7;d++){
     cls[d]=clasificarDia(d);
     if(cls[d].t!=="bloqueado") cand.push(d);
   }
+  nTrab=Math.min(nTrab,cand.length);
+
+  /* 1. elegir los días de trabajo, lo más separados posible */
   var mejor=null;
   function puntaje(combo){
     var p=0;
     combo.forEach(function(d){
       p+=cls[d].t==="libre"?10:4;
-      if(d===5||d===6) p+=3;            /* preferencia fin de semana */
+      if(d===5||d===6) p+=3;
     });
     for(var i=1;i<combo.length;i++){
       var sep=combo[i]-combo[i-1];
-      p+=Math.min(sep,3)*4;             /* premia separación 48-72h */
-      if(sep===1) p-=8;                 /* castiga días seguidos */
+      p+=Math.min(sep,3)*4;
+      if(sep===1) p-=12;
     }
     if(combo.length>1){
       var vuelta=7-(combo[combo.length-1]-combo[0]);
-      if(vuelta===1) p-=6;              /* castiga domingo+lunes */
+      if(vuelta===1) p-=8;
     }
     return p;
   }
-  var n=cand.length,obj=Math.min(3,n);
-  if(obj===0) return {dias:{},cls:cls};
-  (function combinar(ini,acc){
-    if(acc.length===obj){
-      var p=puntaje(acc);
-      if(!mejor||p>mejor.p) mejor={p:p,c:acc.slice()};
-      return;
-    }
-    for(var k=ini;k<n;k++){acc.push(cand[k]);combinar(k+1,acc);acc.pop();}
-  })(0,[]);
-  var orden=["A","B","C"],mapa={};
-  (mejor?mejor.c:[]).forEach(function(d,i){mapa[d]=orden[i%3];});
-  return {dias:mapa,cls:cls};
+  function hayPegadas(combo){
+    for(var i=1;i<combo.length;i++) if(combo[i]-combo[i-1]===1) return true;
+    if(combo.length>1 && (7-(combo[combo.length-1]-combo[0]))===1) return true;
+    return false;
+  }
+  function buscar(n){
+    var best=null;
+    if(n<=0||n>cand.length) return null;
+    (function combinar(ini,acc){
+      if(acc.length===n){
+        var p=puntaje(acc);
+        if(!best||p>best.p) best={p:p,c:acc.slice()};
+        return;
+      }
+      for(var k=ini;k<cand.length;k++){acc.push(cand[k]);combinar(k+1,acc);acc.pop();}
+    })(0,[]);
+    return best;
+  }
+  /* si no se pueden separar, baja una sesión de trabajo antes que juntarlas */
+  var n=nTrab;
+  while(n>3){
+    var intento=buscar(n);
+    if(intento && !hayPegadas(intento.c)){ mejor=intento; break; }
+    n--; nLig++;
+  }
+  if(!mejor) mejor=buscar(n);
+  var trab=mejor?mejor.c:[];
+  var mapa={};
+  trab.forEach(function(d,i){ mapa[d]=CICLO_TRABAJO[i%CICLO_TRABAJO.length]; });
+
+  /* 2. rellenar con días ligeros: primero los bloqueados, que es donde
+        los extensores compensan lo que el agarre ya trabajó */
+  if(nLig>0){
+    var libres=[];
+    for(var e=0;e<7;e++) if(mapa[e]===undefined) libres.push(e);
+    libres.sort(function(a,b){
+      var ba=cls[a].t==="bloqueado"?0:1, bb=cls[b].t==="bloqueado"?0:1;
+      if(ba!==bb) return ba-bb;
+      /* después, los que quedan más lejos de un día de trabajo */
+      function dist(x){
+        if(!trab.length) return 9;
+        return Math.min.apply(null,trab.map(function(t){
+          var dd=Math.abs(t-x); return Math.min(dd,7-dd);}));
+      }
+      return dist(b)-dist(a);
+    });
+    libres.slice(0,nLig).forEach(function(d){ mapa[d]="D"; });
+  }
+  return {dias:mapa,cls:cls,trab:trab};
 }
 
 function sesionDeDia(d){
@@ -1457,11 +1636,33 @@ function hManos(){
    + '<div style="font-size:13px;color:var(--mute);line-height:1.5">'+esc(MANOS.objetivo)+'</div>'
    + '<div style="font-size:12px;color:var(--mute);margin-top:6px">⏱ '+esc(MANOS.cuando)+'</div></div>';
 
-  /* selector de día: marca cuáles son de trabajo */
   var pl=planSemana();
+
+  /* cuántos días a la semana */
+  h+='<div style="background:var(--surface);border-radius:8px;padding:10px 12px;margin-bottom:12px">'
+   + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">'
+   + '<span style="font-size:12px;color:var(--mute)">Días por semana</span>'
+   + '<div class="seg">'
+   + [3,4,5,6].map(function(v){
+       return '<button data-mvol="'+v+'" class="'+(volManos()===v?"on":"")+'">'+v+'</button>';
+     }).join("")
+   + '</div></div>'
+   + '<div style="font-size:11px;color:var(--mute);margin-top:7px;line-height:1.45">'
+   + (volManos()<=3
+      ? 'Tres sesiones de trabajo bien separadas'
+      : (volManos()>=6
+         ? 'Cuatro de trabajo y dos ligeras. Es el tope sano, no subas más'
+         : (volManos()===5?'Tres de trabajo y dos ligeras de extensores'
+                          :'Tres de trabajo y una ligera de extensores')))
+   + '</div></div>';
+
+  /* selector de día: marca cuáles son de trabajo */
   h+='<div class="dias">'+DIAS.map(function(x){
-      var on=d===x.i, trabaja=!!pl.dias[x.i];
-      return '<button data-mdia="'+x.i+'" class="'+(on?"on":(trabaja?"tiene":""))+'">'+x.c+'</button>';
+      var on=d===x.i, s=pl.dias[x.i];
+      var est=on?"on":(s?"tiene":"");
+      var pt=(s&&SESIONES[s]&&SESIONES[s].ligera)
+        ?'<span style="display:block;width:4px;height:4px;border-radius:50%;background:#5BD98A;margin:3px auto 0"></span>':"";
+      return '<button data-mdia="'+x.i+'" class="'+est+'">'+x.c+pt+'</button>';
     }).join("")+'</div>';
 
   /* fecha */
@@ -1474,14 +1675,20 @@ function hManos(){
   h+='<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;gap:8px;flex-wrap:wrap">'
    + '<div><span style="font-size:21px;font-weight:700;letter-spacing:-.02em">'+DIAS[d].l+'</span>'
    + (etq?'<span style="color:var(--mute);font-size:14px;margin-left:8px">Gym: '+etq+'</span>':"")+'</div>'
-   + (plan?'<span style="font-size:13px;color:'+plan.color+';font-weight:600">'+plan.nombre+' · ~'+plan.min+' min</span>':"")
+   + (plan?'<span style="font-size:13px;color:'+plan.color+';font-weight:600">'
+       +(plan.ligera?"● ":"")+plan.nombre+' · ~'+plan.min+' min</span>':"")
    + '</div>';
 
   if(!info.esTrabajo){
     h+='<div style="background:var(--surface);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;'
      + 'padding:12px 14px;margin:10px 0 14px">'
      + '<div style="font-size:14px;font-weight:700;margin-bottom:4px">Descanso de manos</div>'
-     + '<div style="font-size:13px;color:var(--mute);line-height:1.5">'+esc(info.cls.razon)+'</div></div>';
+     + '<div style="font-size:13px;color:var(--mute);line-height:1.5">'+esc(info.cls.razon)+'</div>'
+     + (info.cls.ligeraOk&&volManos()<6
+        ? '<div style="font-size:12px;color:#5BD98A;margin-top:8px;line-height:1.45">'
+          + esc(info.cls.ligeraOk)+'. Sube a más días por semana arriba si quieres que caiga aquí</div>'
+        : "")
+     + '</div>';
     h+='<div style="display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:8px;padding:12px 14px">'
      + hIconoKit("pelota",40)
      + '<div style="font-size:13px;color:var(--mute);line-height:1.45">Si sientes tensión, '
@@ -1498,6 +1705,12 @@ function hManos(){
      + '</div><div class="barra"><i style="width:'+(tot?hechos/tot*100:0).toFixed(0)+'%;background:'
      + (hechos===tot?"#8FD3A8":plan.color)+'"></i></div></div>';
 
+    if(plan.ligera){
+      h+='<div style="background:var(--surface);border-left:3px solid #5BD98A;border-radius:0 8px 8px 0;'
+       + 'padding:10px 12px;margin-bottom:12px;font-size:12px;color:var(--mute);line-height:1.5">'
+       + 'Sesión ligera. Trabaja los extensores, que son los que compensan todo lo que cierras la mano '
+       + 'en el gym y en las sesiones pesadas. <b style="color:var(--chalk)">No busques fallo ni ardor aquí</b></div>';
+    }
     /* cronómetro rápido con los tiempos de la rutina */
     h+='<div style="background:var(--surface);border-radius:8px;padding:10px 12px;margin-bottom:12px">'
      + '<div style="font-size:12px;color:var(--mute);margin-bottom:7px">Cronómetro rápido</div>'
@@ -1587,13 +1800,16 @@ function hManos(){
   if(U.verPlan){
     h+='<div style="background:var(--surface);border-top:1px solid var(--line);border-radius:0 0 8px 8px;padding:12px 14px">'
      + '<div style="font-size:12px;color:var(--mute);margin-bottom:10px;line-height:1.5">'
-     + 'Se arma sola leyendo los días de tu rutina del gym. Si cambias los días de tus ejercicios, esto se reacomoda</div>';
+     + 'Se arma sola leyendo los días de tu rutina del gym. Si cambias los días de tus ejercicios, esto se reacomoda.<br>'
+     + '<span style="color:#5BD98A">●</span> marca las sesiones ligeras, que no cargan tendón y por eso sí caben '
+     + 'en días de espalda o brazo</div>';
     DIAS.forEach(function(x){
       var s=pl.dias[x.i], cl=pl.cls[x.i];
       h+='<div style="padding:8px 0;border-bottom:1px solid var(--line)">'
        + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:2px">'
        + '<span style="font-size:13px;font-weight:600">'+x.l+'</span>'
-       + (s?'<span style="font-size:12px;color:'+SESIONES[s].color+';font-weight:600">'+SESIONES[s].nombre+'</span>'
+       + (s?'<span style="font-size:12px;color:'+SESIONES[s].color+';font-weight:600">'
+             +(SESIONES[s].ligera?"● ":"")+SESIONES[s].nombre+'</span>'
            :'<span style="font-size:12px;color:var(--mute)">Descanso</span>')+'</div>'
        + '<div style="font-size:11px;color:var(--mute);line-height:1.45">'+esc(cl.razon)+'</div></div>';
     });
@@ -1629,6 +1845,20 @@ function hManos(){
     });
     h+='<div style="font-size:11px;color:var(--mute);margin-top:10px;line-height:1.5">'
      + 'Los dibujos son de referencia. Tómale foto a tu propio aparato para reconocerlo de una</div>';
+    h+='<div style="background:var(--iron);border-radius:8px;padding:11px 13px;margin-top:12px;font-size:12px;'
+     + 'color:var(--mute);line-height:1.5">'
+     + '<b style="color:var(--chalk)">Bandas de dedos</b><br>'
+     + '<span style="color:#5B8DD9">●</span> azul suave · '
+     + '<span style="color:#E8724F">●</span> naranja media · '
+     + '<span style="color:#9AA4B2">●</span> negra fuerte<br>'
+     + 'Sube de color cuando las reps salgan sobradas<br><br>'
+     + '<b style="color:var(--chalk)">Los dos aparatos de dedos no son lo mismo</b><br>'
+     + '<span style="color:#5BD98A">●</span> <b style="color:var(--chalk)">Extensor de silicona</b> con 5 anillos: '
+     + 'sirve para <b style="color:var(--chalk)">abrir</b>. Un dedo en cada anillo, pulgar incluido. '
+     + 'La correa de velcro va en la muñeca y la cola se engancha en su hebilla: '
+     + 'la muesca elegida da los niveles 13 · 17 · 21 LB<br>'
+     + '<span style="color:#D9A45B">●</span> <b style="color:var(--chalk)">Ejercitador de resortes</b> de 4 botones: '
+     + 'sirve para <b style="color:var(--chalk)">cerrar</b> cada dedo por separado</div>';
     h+='</div>';
   }
   return h;
@@ -1900,7 +2130,7 @@ document.addEventListener("click",function(ev){
     +"[data-ir],[data-graf],[data-corregir],[data-borrarej],[data-lupa],[data-gf],[data-gn],"
     +"[data-tn],[data-cal],[data-ent],[data-diatog],[data-toggle],"
     +"[data-editnom],[data-renom],[data-tseg],[data-orddiasel],[data-subedia],[data-bajadia],"
-    +"[data-mdia],[data-mtog],[data-guia],[data-fotokit],[data-lupa-kit],[data-crs],[data-cr]");
+    +"[data-mdia],[data-mtog],[data-guia],[data-fotokit],[data-lupa-kit],[data-crs],[data-cr],[data-mvol]");
   if(!t) return;
   var d=t.dataset;
 
@@ -1977,6 +2207,7 @@ document.addEventListener("click",function(ev){
     }
     return render();
   }
+  if(d.mvol!==undefined){S.manosVol=+d.mvol;guardar();return render();}
   if(d.mtog!==undefined){return toggleManos(manosFecha(),+d.mtog);}
   if(d.crs!==undefined){
     var pr=d.crs.split("|");
